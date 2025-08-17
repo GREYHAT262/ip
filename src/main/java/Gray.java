@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Gray {
     public static void respond(String input) {
         String horizontalLine = "----------------------------------------------------------";
@@ -8,5 +10,10 @@ public class Gray {
         Gray.respond("""
                 Hello! I'm Gray.
                 What can I do for you?""");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String input = scanner.nextLine();
+            Gray.respond(input);
+        }
     }
 }
