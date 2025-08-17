@@ -1,6 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Gray {
+    private static final ArrayList<String> tasks = new ArrayList<>();
+
     public static void respond(String input) {
         String horizontalLine = "----------------------------------------------------------";
         System.out.println(horizontalLine + "\n" + input + "\n" + horizontalLine);
@@ -17,7 +20,8 @@ public class Gray {
                 Gray.respond("Bye and see you soon!");
                 break;
             }
-            Gray.respond(input);
+            Gray.respond("added: " + input);
+            Gray.tasks.add(input);
         }
     }
 }
