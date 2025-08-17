@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Gray {
-    private static final ArrayList<String> tasks = new ArrayList<>();
+    private static final ArrayList<Task> tasks = new ArrayList<>();
 
     public static void respond(String input) {
         String horizontalLine = "----------------------------------------------------------";
@@ -20,17 +20,17 @@ public class Gray {
                 Gray.respond("Bye and see you soon!");
                 break;
             } else if (input.equals("list")) {
-                String taskList = "";
+                String taskList = "Here are your tasks:\n";
                 for (int i = 0; i < Gray.tasks.size(); i++) {
                     if (i != 0) {
                         taskList += "\n";
                     }
-                    taskList += i + 1 + ". " + Gray.tasks.get(i);
+                    taskList += i + 1 + ". " + Gray.tasks.get(i).getDescription();
                 }
                 Gray.respond(taskList);
             } else {
                 Gray.respond("added: " + input);
-                Gray.tasks.add(input);
+                Gray.tasks.add(new Task(input));
             }
         }
     }
