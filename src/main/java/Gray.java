@@ -19,18 +19,36 @@ public class Gray {
             if (input.equals("bye")) {
                 Gray.respond("Bye and see you soon!");
                 break;
-            } else if (input.equals("list")) {
+            }
+            if (input.equals("list")) {
                 StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
                 for (int i = 0; i < Gray.tasks.size(); i++) {
                     if (i != 0) {
                         taskList.append("\n");
                     }
-                    taskList.append(i + 1).append(". ").append(Gray.tasks.get(i).getDescription());
+                    Task task = Gray.tasks.get(i);
+                    taskList.append(i + 1).append(".[").append(task.getStatusIcon())
+                            .append("] ").append(task.getDescription());
                 }
                 Gray.respond(taskList.toString());
             } else {
-                Gray.respond("added: " + input);
-                Gray.tasks.add(new Task(input));
+                String[] inputParts = input.split(" ");
+                if (inputParts.length == 2 && inputParts[0].equals("mark")
+                        && inputParts[1].matches("\\d+")) {
+                    StringBuilder output = new StringBuilder("Nice work! This task is marked as done:\n");
+                    try {
+                        Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                        task.markAsDone();
+                        output.append("  [").append(task.getStatusIcon()).append("] ")
+                                .append(task.getDescription());
+                        Gray.respond(output.toString());
+                    } catch (IndexOutOfBoundsException e) {
+                        Gray.respond("This task cannot be found!");
+                    }
+                } else {
+                    Gray.respond("added: " + input);
+                    Gray.tasks.add(new Task(input));
+                }
             }
         }
     }
