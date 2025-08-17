@@ -8,13 +8,13 @@ public class Gray {
 
     public static void main(String[] args) {
         Gray.respond("""
-                Hello! I'm Gray.
+                Hi! I'm Gray, your personal assistant chatbot!
                 What can I do for you?""");
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
             if (input.equals("bye")) {
-                Gray.respond("Bye. Hope to see you again soon!");
+                Gray.respond("Bye and see you soon!");
                 break;
             }
             Gray.respond(input);
