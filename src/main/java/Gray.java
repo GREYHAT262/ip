@@ -20,14 +20,14 @@ public class Gray {
                 Gray.respond("Bye and see you soon!");
                 break;
             } else if (input.equals("list")) {
-                String taskList = "Here are your tasks:\n";
+                StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
                 for (int i = 0; i < Gray.tasks.size(); i++) {
                     if (i != 0) {
-                        taskList += "\n";
+                        taskList.append("\n");
                     }
-                    taskList += i + 1 + ". " + Gray.tasks.get(i).getDescription();
+                    taskList.append(i + 1).append(". ").append(Gray.tasks.get(i).getDescription());
                 }
-                Gray.respond(taskList);
+                Gray.respond(taskList.toString());
             } else {
                 Gray.respond("added: " + input);
                 Gray.tasks.add(new Task(input));
