@@ -27,33 +27,26 @@ public class Gray {
                         taskList.append("\n");
                     }
                     Task task = Gray.tasks.get(i);
-                    taskList.append(i + 1).append(".[").append(task.getStatusIcon())
-                            .append("] ").append(task.getDescription());
+                    taskList.append(i + 1).append(".").append(task);
                 }
                 Gray.respond(taskList.toString());
             } else {
                 String[] inputParts = input.split(" ");
                 if (inputParts.length == 2 && inputParts[0].equals("mark")
                         && inputParts[1].matches("\\d+")) {
-                    StringBuilder output = new StringBuilder("Nice work! This task is marked as done:\n");
                     try {
                         Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
                         task.markAsDone();
-                        output.append("  [").append(task.getStatusIcon()).append("] ")
-                                .append(task.getDescription());
-                        Gray.respond(output.toString());
+                        Gray.respond("Nice work! This task is marked as done:\n  " + task);
                     } catch (IndexOutOfBoundsException e) {
                         Gray.respond("This task cannot be found!");
                     }
                 } else if (inputParts.length == 2 && inputParts[0].equals("unmark")
                         && inputParts[1].matches("\\d+")) {
-                    StringBuilder output = new StringBuilder("I have marked this task as not done:\n");
                     try {
                         Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
                         task.markAsNotDone();
-                        output.append("  [").append(task.getStatusIcon()).append("] ")
-                                .append(task.getDescription());
-                        Gray.respond(output.toString());
+                        Gray.respond("I have marked this task as not done:\n  " + task);
                     } catch (IndexOutOfBoundsException e) {
                         Gray.respond("This task cannot be found!");
                     }
