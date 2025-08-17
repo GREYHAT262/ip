@@ -45,6 +45,18 @@ public class Gray {
                     } catch (IndexOutOfBoundsException e) {
                         Gray.respond("This task cannot be found!");
                     }
+                } else if (inputParts.length == 2 && inputParts[0].equals("unmark")
+                        && inputParts[1].matches("\\d+")) {
+                    StringBuilder output = new StringBuilder("I have marked this task as not done:\n");
+                    try {
+                        Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                        task.markAsNotDone();
+                        output.append("  [").append(task.getStatusIcon()).append("] ")
+                                .append(task.getDescription());
+                        Gray.respond(output.toString());
+                    } catch (IndexOutOfBoundsException e) {
+                        Gray.respond("This task cannot be found!");
+                    }
                 } else {
                     Gray.respond("added: " + input);
                     Gray.tasks.add(new Task(input));
