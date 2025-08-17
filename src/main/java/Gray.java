@@ -13,6 +13,10 @@ public class Gray {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
+            if (input.equals("bye")) {
+                Gray.respond("Bye. Hope to see you again soon!");
+                break;
+            }
             Gray.respond(input);
         }
     }
