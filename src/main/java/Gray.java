@@ -19,9 +19,19 @@ public class Gray {
             if (input.equals("bye")) {
                 Gray.respond("Bye and see you soon!");
                 break;
+            } else if (input.equals("list")) {
+                String taskList = "";
+                for (int i = 0; i < Gray.tasks.size(); i++) {
+                    if (i != 0) {
+                        taskList += "\n";
+                    }
+                    taskList += i + 1 + ". " + Gray.tasks.get(i);
+                }
+                Gray.respond(taskList);
+            } else {
+                Gray.respond("added: " + input);
+                Gray.tasks.add(input);
             }
-            Gray.respond("added: " + input);
-            Gray.tasks.add(input);
         }
     }
 }
