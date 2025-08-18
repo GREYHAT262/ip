@@ -1,7 +1,136 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
-
+----------------------------------------------------------
+Hi! I'm Gray, your personal assistant chatbot!
+What can I do for you?
+----------------------------------------------------------
+----------------------------------------------------------
+I don't understand what you mean.
+Please enter a valid instruction.
+----------------------------------------------------------
+----------------------------------------------------------
+I don't understand what you mean.
+Please enter a valid instruction.
+----------------------------------------------------------
+----------------------------------------------------------
+Nice! You don't have any tasks left!
+----------------------------------------------------------
+----------------------------------------------------------
+This task cannot be found!
+----------------------------------------------------------
+----------------------------------------------------------
+This task cannot be found!
+----------------------------------------------------------
+----------------------------------------------------------
+Invalid instruction.
+Please give the index of the task to be marked.
+----------------------------------------------------------
+----------------------------------------------------------
+Invalid instruction.
+Please give the index of the task to be unmarked.
+----------------------------------------------------------
+----------------------------------------------------------
+I've added this task:
+  [T][ ] borrow book
+You have 1 task in your list. All the best!
+----------------------------------------------------------
+----------------------------------------------------------
+I've added this task:
+  [D][ ] return book (by: Sunday)
+You have 2 tasks in your list. All the best!
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][ ] borrow book
+2.[D][ ] return book (by: Sunday)
+----------------------------------------------------------
+----------------------------------------------------------
+I've added this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+You have 3 tasks in your list. All the best!
+----------------------------------------------------------
+----------------------------------------------------------
+I've added this task:
+  [D][ ] do homework (by: no idea :-p)
+You have 4 tasks in your list. All the best!
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][ ] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+I have marked this task as done:
+  [T][X] borrow book
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+I have marked this task as done:
+  [D][X] return book (by: Sunday)
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][X] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+I have marked this task as not done:
+  [D][ ] return book (by: Sunday)
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+I have marked this task as not done:
+  [D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+I have marked this task as done:
+  [T][X] borrow book
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+This task cannot be found!
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------
+----------------------------------------------------------
+This task cannot be found!
+----------------------------------------------------------
+----------------------------------------------------------
+Here are your tasks:
+1.[T][X] borrow book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------------------------------------

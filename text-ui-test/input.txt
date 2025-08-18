@@ -1,0 +1,27 @@
+blah
+some random command
+list
+mark 1
+unmark 1
+mark
+unmark
+todo borrow book
+deadline return book /by Sunday
+list
+event project meeting /from Mon 2pm /to 4pm
+deadline do homework /by no idea :-p
+list
+mark 1
+list
+mark 2
+list
+unmark 2
+list
+unmark 4
+list
+mark 1
+list
+mark 26
+list
+unmark 26
+list
