@@ -74,10 +74,10 @@ public class Gray {
                     Gray.tasks.add(todo);
                     if (Gray.tasks.size() == 1) {
                         Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
-                                + Gray.tasks.size() + " more task to complete. All the best!");
+                                + Gray.tasks.size() + " task in your list. All the best!");
                     } else {
                         Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
-                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                                + Gray.tasks.size() + " tasks in your list. All the best!");
                     }
                 }
                 case "deadline" -> {
@@ -86,10 +86,10 @@ public class Gray {
                     Gray.tasks.add(deadline);
                     if (Gray.tasks.size() == 1) {
                         Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
-                                + Gray.tasks.size() + " more task to complete. All the best!");
+                                + Gray.tasks.size() + " task in your list. All the best!");
                     } else {
                         Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
-                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                                + Gray.tasks.size() + " tasks in your list. All the best!");
                     }
                 }
                 case "event" -> {
@@ -99,10 +99,10 @@ public class Gray {
                     Gray.tasks.add(event);
                     if (Gray.tasks.size() == 1) {
                         Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
-                                + Gray.tasks.size() + " more task to complete. All the best!");
+                                + Gray.tasks.size() + " task in your list. All the best!");
                     } else {
                         Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
-                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                                + Gray.tasks.size() + " tasks in your list. All the best!");
                     }
                 }
                 default -> Gray.respond("""
