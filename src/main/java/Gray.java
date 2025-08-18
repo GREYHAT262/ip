@@ -25,14 +25,18 @@ public class Gray {
             switch (command) {
                 case "list" -> {
                     StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
-                    for (int i = 0; i < Gray.tasks.size(); i++) {
-                        if (i != 0) {
-                            taskList.append("\n");
+                    if (Gray.tasks.isEmpty()) {
+                        Gray.respond("Nice! You don't have any tasks left!");
+                    } else {
+                        for (int i = 0; i < Gray.tasks.size(); i++) {
+                            if (i != 0) {
+                                taskList.append("\n");
+                            }
+                            Task task = Gray.tasks.get(i);
+                            taskList.append(i + 1).append(".").append(task);
                         }
-                        Task task = Gray.tasks.get(i);
-                        taskList.append(i + 1).append(".").append(task);
+                        Gray.respond(taskList.toString());
                     }
-                    Gray.respond(taskList.toString());
                 }
                 case "mark" -> {
                     if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
@@ -68,23 +72,38 @@ public class Gray {
                     String description = input.split(" ", 2)[1];
                     Todo todo = new Todo(description);
                     Gray.tasks.add(todo);
-                    Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
-                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    if (Gray.tasks.size() == 1) {
+                        Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
+                                + Gray.tasks.size() + " more task to complete. All the best!");
+                    } else {
+                        Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
+                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    }
                 }
                 case "deadline" -> {
                     String[] info = input.split(" ", 2)[1].split("/by");
-                    Deadline deadline = new Deadline(info[0], info[1].trim());
+                    Deadline deadline = new Deadline(info[0].trim(), info[1].trim());
                     Gray.tasks.add(deadline);
-                    Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
-                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    if (Gray.tasks.size() == 1) {
+                        Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
+                                + Gray.tasks.size() + " more task to complete. All the best!");
+                    } else {
+                        Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
+                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    }
                 }
                 case "event" -> {
                     String[] info = input.split(" ", 2)[1].split("/from");
                     String[] times = info[1].split("/to");
-                    Event event = new Event(info[0], times[0].trim(), times[1].trim());
+                    Event event = new Event(info[0].trim(), times[0].trim(), times[1].trim());
                     Gray.tasks.add(event);
-                    Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
-                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    if (Gray.tasks.size() == 1) {
+                        Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
+                                + Gray.tasks.size() + " more task to complete. All the best!");
+                    } else {
+                        Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
+                                + Gray.tasks.size() + " more tasks to complete. All the best!");
+                    }
                 }
                 default -> Gray.respond("""
                         I don't understand what you mean.
