@@ -14,7 +14,7 @@ public class Gray {
                 Hi! I'm Gray, your personal assistant chatbot!
                 What can I do for you?""");
         Scanner scanner = new Scanner(System.in);
-        while (true) {
+        while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
             if (input.equals("bye")) {
                 Gray.respond("Bye and see you soon!");
