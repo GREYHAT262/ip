@@ -20,40 +20,75 @@ public class Gray {
                 Gray.respond("Bye and see you soon!");
                 break;
             }
-            if (input.equals("list")) {
-                StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
-                for (int i = 0; i < Gray.tasks.size(); i++) {
-                    if (i != 0) {
-                        taskList.append("\n");
+            String[] inputParts = input.split(" ");
+            String command = inputParts[0];
+            switch (command) {
+                case "list" -> {
+                    StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
+                    for (int i = 0; i < Gray.tasks.size(); i++) {
+                        if (i != 0) {
+                            taskList.append("\n");
+                        }
+                        Task task = Gray.tasks.get(i);
+                        taskList.append(i + 1).append(".").append(task);
                     }
-                    Task task = Gray.tasks.get(i);
-                    taskList.append(i + 1).append(".").append(task);
+                    Gray.respond(taskList.toString());
                 }
-                Gray.respond(taskList.toString());
-            } else {
-                String[] inputParts = input.split(" ");
-                if (inputParts.length == 2 && inputParts[0].equals("mark")
-                        && inputParts[1].matches("\\d+")) {
-                    try {
-                        Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                        task.markAsDone();
-                        Gray.respond("Nice work! This task is marked as done:\n  " + task);
-                    } catch (IndexOutOfBoundsException e) {
-                        Gray.respond("This task cannot be found!");
+                case "mark" -> {
+                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+                        try {
+                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                            task.markAsDone();
+                            Gray.respond("I have marked this task as done:\n  " + task);
+                        } catch (IndexOutOfBoundsException e) {
+                            Gray.respond("This task cannot be found!");
+                        }
+                    } else {
+                        Gray.respond("""
+                                Invalid instruction.
+                                Please give the index of the task to be marked.""");
                     }
-                } else if (inputParts.length == 2 && inputParts[0].equals("unmark")
-                        && inputParts[1].matches("\\d+")) {
-                    try {
-                        Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                        task.markAsNotDone();
-                        Gray.respond("I have marked this task as not done:\n  " + task);
-                    } catch (IndexOutOfBoundsException e) {
-                        Gray.respond("This task cannot be found!");
-                    }
-                } else {
-                    Gray.respond("added: " + input);
-                    Gray.tasks.add(new Task(input));
                 }
+                case "unmark" -> {
+                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+                        try {
+                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                            task.markAsNotDone();
+                            Gray.respond("I have marked this task as not done:\n  " + task);
+                        } catch (IndexOutOfBoundsException e) {
+                            Gray.respond("This task cannot be found!");
+                        }
+                    } else {
+                        Gray.respond("""
+                                Invalid instruction.
+                                Please give the index of the task to be unmarked.""");
+                    }
+                }
+                case "todo" -> {
+                    String description = input.split(" ", 2)[1];
+                    Todo todo = new Todo(description);
+                    Gray.tasks.add(todo);
+                    Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
+                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                }
+                case "deadline" -> {
+                    String[] info = input.split(" ", 2)[1].split("/by");
+                    Deadline deadline = new Deadline(info[0], info[1].trim());
+                    Gray.tasks.add(deadline);
+                    Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
+                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                }
+                case "event" -> {
+                    String[] info = input.split(" ", 2)[1].split("/from");
+                    String[] times = info[1].split("/to");
+                    Event event = new Event(info[0], times[0].trim(), times[1].trim());
+                    Gray.tasks.add(event);
+                    Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
+                            + Gray.tasks.size() + " more tasks to complete. All the best!");
+                }
+                default -> Gray.respond("""
+                        I don't understand what you mean.
+                        Please enter a valid instruction.""");
             }
         }
     }
