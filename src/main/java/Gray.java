@@ -9,6 +9,17 @@ public class Gray {
         System.out.println(horizontalLine + "\n" + input + "\n" + horizontalLine);
     }
 
+    public static void addTask(Task task) {
+        Gray.tasks.add(task);
+        if (Gray.tasks.size() == 1) {
+            Gray.respond("I've added this task:\n  " + task + "\n" + "You have "
+                    + Gray.tasks.size() + " task in your list. All the best!");
+        } else {
+            Gray.respond("I've added this task:\n  " + task + "\n" + "You have "
+                    + Gray.tasks.size() + " tasks in your list. All the best!");
+        }
+    }
+
     public static void main(String[] args) {
         Gray.respond("""
                 Hi! I'm Gray, your personal assistant chatbot!
@@ -20,7 +31,7 @@ public class Gray {
                 Gray.respond("Bye and see you soon!");
                 break;
             }
-            String[] inputParts = input.split(" ");
+            String[] inputParts = input.split(" ", 2);
             String command = inputParts[0];
             switch (command) {
                 case "list" -> {
@@ -71,20 +82,12 @@ public class Gray {
                 case "todo" -> {
                     String description;
                     try {
-                        String[] info = input.split(" ", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("todo", "description");
                         }
-                        description = info[1];
+                        description = inputParts[1];
                         Todo todo = new Todo(description);
-                        Gray.tasks.add(todo);
-                        if (Gray.tasks.size() == 1) {
-                            Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
-                                    + Gray.tasks.size() + " task in your list. All the best!");
-                        } else {
-                            Gray.respond("I've added this task:\n  " + todo + "\n" + "You have "
-                                    + Gray.tasks.size() + " tasks in your list. All the best!");
-                        }
+                        Gray.addTask(todo);
                     } catch (InvalidTaskException e) {
                         Gray.respond(e.getMessage());
                     }
@@ -93,25 +96,17 @@ public class Gray {
                     String description;
                     String by;
                     try {
-                        String[] info = input.split(" ", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("deadline", "description");
                         }
-                        info = info[1].split("/by", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        inputParts = inputParts[1].split("/by", 2);
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("deadline", "due date/time");
                         }
-                        description = info[0].trim();
-                        by = info[1].trim();
+                        description = inputParts[0].trim();
+                        by = inputParts[1].trim();
                         Deadline deadline = new Deadline(description, by);
-                        Gray.tasks.add(deadline);
-                        if (Gray.tasks.size() == 1) {
-                            Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
-                                    + Gray.tasks.size() + " task in your list. All the best!");
-                        } else {
-                            Gray.respond("I've added this task:\n  " + deadline + "\n" + "You have "
-                                    + Gray.tasks.size() + " tasks in your list. All the best!");
-                        }
+                        Gray.addTask(deadline);
                     } catch (InvalidTaskException e) {
                         Gray.respond(e.getMessage());
                     }
@@ -121,30 +116,22 @@ public class Gray {
                     String start;
                     String end;
                     try {
-                        String[] info = input.split(" ", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("event", "description");
                         }
-                        info = info[1].split("/from", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        inputParts = inputParts[1].split("/from", 2);
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("event", "start date/time");
                         }
-                        description = info[0].trim();
-                        info = info[1].split("/to", 2);
-                        if (info.length != 2 || info[1].trim().isEmpty()) {
+                        description = inputParts[0].trim();
+                        inputParts = inputParts[1].split("/to", 2);
+                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                             throw new InvalidTaskException("event", "end date/time");
                         }
-                        start = info[0].trim();
-                        end = info[1].trim();
+                        start = inputParts[0].trim();
+                        end = inputParts[1].trim();
                         Event event = new Event(description, start, end);
-                        Gray.tasks.add(event);
-                        if (Gray.tasks.size() == 1) {
-                            Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
-                                    + Gray.tasks.size() + " task in your list. All the best!");
-                        } else {
-                            Gray.respond("I've added this task:\n  " + event + "\n" + "You have "
-                                    + Gray.tasks.size() + " tasks in your list. All the best!");
-                        }
+                        Gray.addTask(event);
                     } catch (InvalidTaskException e) {
                         Gray.respond(e.getMessage());
                     }
