@@ -3,8 +3,10 @@ some random command
 list
 mark 1
 unmark 1
+delete 1
 mark two
 unmark three
+delete one
 todo borrow book
 deadline return book /by Sunday
 list
@@ -24,6 +26,8 @@ list
 mark 26
 list
 unmark 26
+list
+delete 1
 list
 list of books
 todo

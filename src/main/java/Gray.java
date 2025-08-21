@@ -174,6 +174,28 @@ public class Gray {
                         Gray.respond(e.getMessage());
                     }
                 }
+                case "delete" -> {
+                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+                        try {
+                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                            Gray.tasks.remove(Integer.parseInt(inputParts[1]) - 1);
+                            if (Gray.tasks.isEmpty()) {
+                                Gray.respond("I've deleted this task:\n  " + task + "\n"
+                                        + "You have no more tasks left!");
+                            } else if (Gray.tasks.size() == 1) {
+                                Gray.respond("I've deleted this task:\n  " + task + "\n"
+                                        + "You have 1 task in your list. All the best!");
+                            } else {
+                                Gray.respond("I've deleted this task:\n  " + task + "\n" + "You have "
+                                        + Gray.tasks.size() + " tasks in your list. All the best!");
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            Gray.respond("This task cannot be found!");
+                        }
+                    } else {
+                        Gray.respond("Please give the index of the task to be deleted.");
+                    }
+                }
                 default -> Gray.respond("""
                         I don't understand what you mean.
                         Please enter a valid instruction.""");
