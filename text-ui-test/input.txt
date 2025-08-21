@@ -3,8 +3,8 @@ some random command
 list
 mark 1
 unmark 1
-mark
-unmark
+mark two
+unmark three
 todo borrow book
 deadline return book /by Sunday
 list
@@ -25,3 +25,22 @@ mark 26
 list
 unmark 26
 list
+list of books
+todo
+deadline
+deadline return book
+deadline /by
+deadline /by Sunday
+deadline return book /by
+event
+event   /from   /to
+event marathon
+event marathon /from   /to
+event    /from 8am
+event    /to 10am
+event    /from 8am /to 10am
+event marathon /from 8am
+event marathon /from 8am /to
+event marathon /to 10am
+event marathon /from  /to 10am
+event marathon /to 10am /from 8am

@@ -4,19 +4,49 @@ import java.util.ArrayList;
 public class Gray {
     private static final ArrayList<Task> tasks = new ArrayList<>();
 
-    public static void respond(String input) {
-        String horizontalLine = "----------------------------------------------------------";
+    private static void respond(String input) {
+        String horizontalLine = "-------------------------------------------------------------------";
         System.out.println(horizontalLine + "\n" + input + "\n" + horizontalLine);
     }
 
-    public static void addTask(Task task) {
+    private static void addTask(Task task) {
         Gray.tasks.add(task);
         if (Gray.tasks.size() == 1) {
-            Gray.respond("I've added this task:\n  " + task + "\n" + "You have "
-                    + Gray.tasks.size() + " task in your list. All the best!");
+            Gray.respond("I've added this task:\n  " + task + "\n"
+                    + "You have 1 task in your list. All the best!");
         } else {
             Gray.respond("I've added this task:\n  " + task + "\n" + "You have "
                     + Gray.tasks.size() + " tasks in your list. All the best!");
+        }
+    }
+    
+    private static String inBetween(String str1, String str2, String target) {
+        String[] firstSplit = target.split(str1, 2);
+        if (firstSplit.length == 2) {
+            return firstSplit[1].split(str2, 2)[0].trim();
+        } else {
+            return "";
+        }
+    }
+
+    private static void checkEvent(String description, String start, String end) throws InvalidTaskException {
+        boolean noDescription = description.isEmpty();
+        boolean noStart = start.isEmpty();
+        boolean noEnd = end.isEmpty();
+        if (noDescription && noStart && noEnd) {
+            throw new InvalidTaskException("event", "description, start and end date/time");
+        } else if (noDescription && noStart) {
+            throw new InvalidTaskException("event", "description and start date/time");
+        } else if (noDescription && noEnd) {
+            throw new InvalidTaskException("event", "description and end date/time");
+        } else if (noStart && noEnd) {
+            throw new InvalidTaskException("event", "start and end date/time");
+        } else if (noDescription) {
+            throw new InvalidTaskException("event", "description");
+        } else if (noStart) {
+            throw new InvalidTaskException("event", "start date/time");
+        } else if (noEnd) {
+            throw new InvalidTaskException("event", "end date/time");
         }
     }
 
@@ -35,6 +65,12 @@ public class Gray {
             String command = inputParts[0];
             switch (command) {
                 case "list" -> {
+                    if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
+                        Gray.respond("""
+                                I don't understand what you mean.
+                                Please enter a valid instruction.""");
+                        break;
+                    }
                     StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
                     if (Gray.tasks.isEmpty()) {
                         Gray.respond("Nice! You don't have any tasks left!");
@@ -59,9 +95,7 @@ public class Gray {
                             Gray.respond("This task cannot be found!");
                         }
                     } else {
-                        Gray.respond("""
-                                Invalid instruction.
-                                Please give the index of the task to be marked.""");
+                        Gray.respond("Please give the index of the task to be marked.");
                     }
                 }
                 case "unmark" -> {
@@ -74,9 +108,7 @@ public class Gray {
                             Gray.respond("This task cannot be found!");
                         }
                     } else {
-                        Gray.respond("""
-                                Invalid instruction.
-                                Please give the index of the task to be unmarked.""");
+                        Gray.respond("Please give the index of the task to be unmarked.");
                     }
                 }
                 case "todo" -> {
@@ -97,6 +129,13 @@ public class Gray {
                     String by;
                     try {
                         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+                            throw new InvalidTaskException("deadline",
+                                    "description and due date/time");
+                        } else if (inputParts[1].trim().startsWith("/by")) {
+                            if (inputParts[1].split("/by", 2)[1].isEmpty()) {
+                                throw new InvalidTaskException("deadline",
+                                        "description and due date/time");
+                            }
                             throw new InvalidTaskException("deadline", "description");
                         }
                         inputParts = inputParts[1].split("/by", 2);
@@ -112,24 +151,23 @@ public class Gray {
                     }
                 }
                 case "event" -> {
-                    String description;
-                    String start;
-                    String end;
                     try {
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("event", "description");
+                        String description = Gray.inBetween(" ", "/from", input);
+                        if (description.startsWith("/to")) {
+                            description = "";
                         }
-                        inputParts = inputParts[1].split("/from", 2);
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("event", "start date/time");
+                        String start = Gray.inBetween("/from", "/to", input);
+                        String[] temp = input.split("/to", 2);
+                        String end;
+                        if (temp.length == 2) {
+                            end = temp[1].trim();
+                        } else {
+                            end = "";
                         }
-                        description = inputParts[0].trim();
-                        inputParts = inputParts[1].split("/to", 2);
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("event", "end date/time");
+                        Gray.checkEvent(description, start, end);
+                        if (description.contains("/to")) {
+                            throw new InvalidTaskException("event", "correct ordering of information");
                         }
-                        start = inputParts[0].trim();
-                        end = inputParts[1].trim();
                         Event event = new Event(description, start, end);
                         Gray.addTask(event);
                     } catch (InvalidTaskException e) {
