@@ -2,6 +2,43 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Gray {
+    public enum Command {
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, INVALID;
+    }
+
+    public enum TaskType {
+        TODO("todo"),
+        DEADLINE("deadline"),
+        EVENT("event");
+        private final String taskType;
+        TaskType(String taskType) {
+            this.taskType = taskType;
+        }
+        public String getTaskType() {
+            return this.taskType;
+        }
+    }
+
+    public enum MissingInfo {
+        DESCRIPTION("description"),
+        DUE("due date/time"),
+        START("start date/time"),
+        END("end date/time"),
+        DESCRIPTION_DUE("description and due date/time"),
+        DESCRIPTION_START("description and start date/time"),
+        DESCRIPTION_END("description and end date/time"),
+        START_END("start and end date/time"),
+        DESCRIPTION_START_END("description, start and end date/time"),
+        WRONG_ORDER("correct ordering of information");
+        private final String missingInfo;
+        MissingInfo(String missingInfo) {
+            this.missingInfo = missingInfo;
+        }
+        public String getMissingInfo() {
+            return this.missingInfo;
+        }
+    }
+
     private static final ArrayList<Task> tasks = new ArrayList<>();
 
     private static void respond(String input) {
@@ -34,19 +71,19 @@ public class Gray {
         boolean noStart = start.isEmpty();
         boolean noEnd = end.isEmpty();
         if (noDescription && noStart && noEnd) {
-            throw new InvalidTaskException("event", "description, start and end date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.DESCRIPTION_START_END);
         } else if (noDescription && noStart) {
-            throw new InvalidTaskException("event", "description and start date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.DESCRIPTION_START);
         } else if (noDescription && noEnd) {
-            throw new InvalidTaskException("event", "description and end date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.DESCRIPTION_END);
         } else if (noStart && noEnd) {
-            throw new InvalidTaskException("event", "start and end date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.START_END);
         } else if (noDescription) {
-            throw new InvalidTaskException("event", "description");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.DESCRIPTION);
         } else if (noStart) {
-            throw new InvalidTaskException("event", "start date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.START);
         } else if (noEnd) {
-            throw new InvalidTaskException("event", "end date/time");
+            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.END);
         }
     }
 
@@ -62,9 +99,14 @@ public class Gray {
                 break;
             }
             String[] inputParts = input.split(" ", 2);
-            String command = inputParts[0];
+            Command command;
+            try {
+                command = Command.valueOf(inputParts[0].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                command = Command.INVALID;
+            }
             switch (command) {
-                case "list" -> {
+                case LIST -> {
                     if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
                         Gray.respond("""
                                 I don't understand what you mean.
@@ -85,7 +127,7 @@ public class Gray {
                         Gray.respond(taskList.toString());
                     }
                 }
-                case "mark" -> {
+                case MARK -> {
                     if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
                         try {
                             Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
@@ -98,7 +140,7 @@ public class Gray {
                         Gray.respond("Please give the index of the task to be marked.");
                     }
                 }
-                case "unmark" -> {
+                case UNMARK -> {
                     if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
                         try {
                             Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
@@ -111,11 +153,11 @@ public class Gray {
                         Gray.respond("Please give the index of the task to be unmarked.");
                     }
                 }
-                case "todo" -> {
+                case TODO -> {
                     String description;
                     try {
                         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("todo", "description");
+                            throw new InvalidTaskException(TaskType.TODO, MissingInfo.DESCRIPTION);
                         }
                         description = inputParts[1];
                         Todo todo = new Todo(description);
@@ -124,23 +166,21 @@ public class Gray {
                         Gray.respond(e.getMessage());
                     }
                 }
-                case "deadline" -> {
+                case DEADLINE -> {
                     String description;
                     String by;
                     try {
                         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("deadline",
-                                    "description and due date/time");
+                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
                         } else if (inputParts[1].trim().startsWith("/by")) {
                             if (inputParts[1].split("/by", 2)[1].isEmpty()) {
-                                throw new InvalidTaskException("deadline",
-                                        "description and due date/time");
+                                throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
                             }
-                            throw new InvalidTaskException("deadline", "description");
+                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION);
                         }
                         inputParts = inputParts[1].split("/by", 2);
                         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException("deadline", "due date/time");
+                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DUE);
                         }
                         description = inputParts[0].trim();
                         by = inputParts[1].trim();
@@ -150,7 +190,7 @@ public class Gray {
                         Gray.respond(e.getMessage());
                     }
                 }
-                case "event" -> {
+                case EVENT -> {
                     try {
                         String description = Gray.inBetween(" ", "/from", input);
                         if (description.startsWith("/to")) {
@@ -166,7 +206,7 @@ public class Gray {
                         }
                         Gray.checkEvent(description, start, end);
                         if (description.contains("/to")) {
-                            throw new InvalidTaskException("event", "correct ordering of information");
+                            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.WRONG_ORDER);
                         }
                         Event event = new Event(description, start, end);
                         Gray.addTask(event);
@@ -174,7 +214,7 @@ public class Gray {
                         Gray.respond(e.getMessage());
                     }
                 }
-                case "delete" -> {
+                case DELETE -> {
                     if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
                         try {
                             Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
