@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -239,6 +240,46 @@ public class Gray {
             } catch (IOException e) {
                 Gray.respond("Sorry! I'm not able to create the file to store your tasks!");
             }
+        }
+        try {
+            Scanner tasksFileScanner = new Scanner(tasksFile);
+            while (tasksFileScanner.hasNextLine()) {
+                String entry = tasksFileScanner.nextLine();
+                String[] parts = entry.split("\\|");
+                String type = parts[0].trim();
+                String mark = parts[1].trim();
+                switch (type) {
+                    case "T" -> {
+                        String description = parts[2].trim();
+                        Todo todo = new Todo(description);
+                        Gray.tasks.add(todo);
+                        if (mark.equals("1")) {
+                            todo.markAsDone();
+                        }
+                    }
+                    case "D" -> {
+                        String description = parts[2].trim();
+                        String by = parts[3].trim();
+                        Deadline deadline = new Deadline(description, by);
+                        Gray.tasks.add(deadline);
+                        if (mark.equals("1")) {
+                            deadline.markAsDone();
+                        }
+                    }
+                    case "E" -> {
+                        String description = parts[2].trim();
+                        String start = parts[3].trim();
+                        String end = parts[4].trim();
+                        Event event = new Event(description, start, end);
+                        Gray.tasks.add(event);
+                        if (mark.equals("1")) {
+                            event.markAsDone();
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Gray.respond("This file is not present.");
         }
         try {
             FileWriter fileWriter = new FileWriter(tasksFile, true);
