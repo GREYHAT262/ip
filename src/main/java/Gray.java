@@ -246,10 +246,19 @@ public class Gray {
             while (tasksFileScanner.hasNextLine()) {
                 String entry = tasksFileScanner.nextLine();
                 String[] parts = entry.split("\\|");
+                if (parts.length < 2) {
+                    throw new CorruptedFileException();
+                }
                 String type = parts[0].trim();
                 String mark = parts[1].trim();
+                if (!(mark.equals("0") || mark.equals("1"))) {
+                    throw new CorruptedFileException();
+                }
                 switch (type) {
                     case "T" -> {
+                        if (parts.length != 3) {
+                            throw new CorruptedFileException();
+                        }
                         String description = parts[2].trim();
                         Todo todo = new Todo(description);
                         Gray.tasks.add(todo);
@@ -258,6 +267,9 @@ public class Gray {
                         }
                     }
                     case "D" -> {
+                        if (parts.length != 4) {
+                            throw new CorruptedFileException();
+                        }
                         String description = parts[2].trim();
                         String by = parts[3].trim();
                         Deadline deadline = new Deadline(description, by);
@@ -267,6 +279,9 @@ public class Gray {
                         }
                     }
                     case "E" -> {
+                        if (parts.length != 5) {
+                            throw new CorruptedFileException();
+                        }
                         String description = parts[2].trim();
                         String start = parts[3].trim();
                         String end = parts[4].trim();
@@ -276,10 +291,14 @@ public class Gray {
                             event.markAsDone();
                         }
                     }
+                    default -> throw new CorruptedFileException();
                 }
             }
         } catch (FileNotFoundException e) {
             Gray.respond("This file is not present.");
+        } catch (CorruptedFileException e) {
+            Gray.respond(e.getMessage());
+            Gray.tasks.clear();
         }
         try {
             FileWriter fileWriter = new FileWriter(tasksFile, true);
