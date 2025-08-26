@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -87,159 +91,253 @@ public class Gray {
         }
     }
 
-    public static void main(String[] args) {
-        Gray.respond("""
-                Hi! I'm Gray, your personal assistant chatbot!
-                What can I do for you?""");
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine();
-            if (input.equals("bye")) {
-                Gray.respond("Bye and see you soon!");
-                break;
-            }
-            String[] inputParts = input.split(" ", 2);
-            Command command;
-            try {
-                command = Command.valueOf(inputParts[0].toUpperCase());
-            } catch (IllegalArgumentException e) {
-                command = Command.INVALID;
-            }
-            switch (command) {
-                case LIST -> {
-                    if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
-                        Gray.respond("""
+    private static void list(String[] inputParts) {
+        if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
+            Gray.respond("""
                                 I don't understand what you mean.
                                 Please enter a valid instruction.""");
-                        break;
+        } else {
+            StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
+            if (Gray.tasks.isEmpty()) {
+                Gray.respond("Nice! You don't have any tasks left!");
+            } else {
+                for (int i = 0; i < Gray.tasks.size(); i++) {
+                    if (i != 0) {
+                        taskList.append("\n");
                     }
-                    StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
-                    if (Gray.tasks.isEmpty()) {
-                        Gray.respond("Nice! You don't have any tasks left!");
-                    } else {
-                        for (int i = 0; i < Gray.tasks.size(); i++) {
-                            if (i != 0) {
-                                taskList.append("\n");
-                            }
-                            Task task = Gray.tasks.get(i);
-                            taskList.append(i + 1).append(".").append(task);
-                        }
-                        Gray.respond(taskList.toString());
-                    }
+                    Task task = Gray.tasks.get(i);
+                    taskList.append(i + 1).append(".").append(task);
                 }
-                case MARK -> {
-                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-                        try {
-                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                            task.markAsDone();
-                            Gray.respond("I have marked this task as done:\n  " + task);
-                        } catch (IndexOutOfBoundsException e) {
-                            Gray.respond("This task cannot be found!");
-                        }
-                    } else {
-                        Gray.respond("Please give the index of the task to be marked.");
-                    }
-                }
-                case UNMARK -> {
-                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-                        try {
-                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                            task.markAsNotDone();
-                            Gray.respond("I have marked this task as not done:\n  " + task);
-                        } catch (IndexOutOfBoundsException e) {
-                            Gray.respond("This task cannot be found!");
-                        }
-                    } else {
-                        Gray.respond("Please give the index of the task to be unmarked.");
-                    }
-                }
-                case TODO -> {
-                    String description;
-                    try {
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException(TaskType.TODO, MissingInfo.DESCRIPTION);
-                        }
-                        description = inputParts[1];
-                        Todo todo = new Todo(description);
-                        Gray.addTask(todo);
-                    } catch (InvalidTaskException e) {
-                        Gray.respond(e.getMessage());
-                    }
-                }
-                case DEADLINE -> {
-                    String description;
-                    String by;
-                    try {
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
-                        } else if (inputParts[1].trim().startsWith("/by")) {
-                            if (inputParts[1].split("/by", 2)[1].isEmpty()) {
-                                throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
-                            }
-                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION);
-                        }
-                        inputParts = inputParts[1].split("/by", 2);
-                        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                            throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DUE);
-                        }
-                        description = inputParts[0].trim();
-                        by = inputParts[1].trim();
-                        Deadline deadline = new Deadline(description, by);
-                        Gray.addTask(deadline);
-                    } catch (InvalidTaskException e) {
-                        Gray.respond(e.getMessage());
-                    }
-                }
-                case EVENT -> {
-                    try {
-                        String description = Gray.inBetween(" ", "/from", input);
-                        if (description.startsWith("/to")) {
-                            description = "";
-                        }
-                        String start = Gray.inBetween("/from", "/to", input);
-                        String[] temp = input.split("/to", 2);
-                        String end;
-                        if (temp.length == 2) {
-                            end = temp[1].trim();
-                        } else {
-                            end = "";
-                        }
-                        Gray.checkEvent(description, start, end);
-                        if (description.contains("/to")) {
-                            throw new InvalidTaskException(TaskType.EVENT, MissingInfo.WRONG_ORDER);
-                        }
-                        Event event = new Event(description, start, end);
-                        Gray.addTask(event);
-                    } catch (InvalidTaskException e) {
-                        Gray.respond(e.getMessage());
-                    }
-                }
-                case DELETE -> {
-                    if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-                        try {
-                            Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                            Gray.tasks.remove(Integer.parseInt(inputParts[1]) - 1);
-                            if (Gray.tasks.isEmpty()) {
-                                Gray.respond("I've deleted this task:\n  " + task + "\n"
-                                        + "You have no more tasks left!");
-                            } else if (Gray.tasks.size() == 1) {
-                                Gray.respond("I've deleted this task:\n  " + task + "\n"
-                                        + "You have 1 task in your list. All the best!");
-                            } else {
-                                Gray.respond("I've deleted this task:\n  " + task + "\n" + "You have "
-                                        + Gray.tasks.size() + " tasks in your list. All the best!");
-                            }
-                        } catch (IndexOutOfBoundsException e) {
-                            Gray.respond("This task cannot be found!");
-                        }
-                    } else {
-                        Gray.respond("Please give the index of the task to be deleted.");
-                    }
-                }
-                default -> Gray.respond("""
-                        I don't understand what you mean.
-                        Please enter a valid instruction.""");
+                Gray.respond(taskList.toString());
             }
+        }
+    }
+
+    private static void mark(String[] inputParts) {
+        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+            try {
+                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                task.markAsDone();
+                Gray.respond("I have marked this task as done:\n  " + task);
+            } catch (IndexOutOfBoundsException e) {
+                Gray.respond("This task cannot be found!");
+            }
+        } else {
+            Gray.respond("Please give the index of the task to be marked.");
+        }
+    }
+
+    private static void unmark(String[] inputParts) {
+        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+            try {
+                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                task.markAsNotDone();
+                Gray.respond("I have marked this task as not done:\n  " + task);
+            } catch (IndexOutOfBoundsException e) {
+                Gray.respond("This task cannot be found!");
+            }
+        } else {
+            Gray.respond("Please give the index of the task to be unmarked.");
+        }
+    }
+
+    private static void createTodo(String[] inputParts) {
+        String description;
+        try {
+            if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+                throw new InvalidTaskException(TaskType.TODO, MissingInfo.DESCRIPTION);
+            }
+            description = inputParts[1];
+            Todo todo = new Todo(description);
+            Gray.addTask(todo);
+        } catch (InvalidTaskException e) {
+            Gray.respond(e.getMessage());
+        }
+    }
+
+    private static void createDeadline(String[] inputParts) {
+        String description;
+        String by;
+        try {
+            if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+                throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
+            } else if (inputParts[1].trim().startsWith("/by")) {
+                if (inputParts[1].split("/by", 2)[1].isEmpty()) {
+                    throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
+                }
+                throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION);
+            }
+            inputParts = inputParts[1].split("/by", 2);
+            if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+                throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DUE);
+            }
+            description = inputParts[0].trim();
+            by = inputParts[1].trim();
+            Deadline deadline = new Deadline(description, by);
+            Gray.addTask(deadline);
+        } catch (InvalidTaskException e) {
+            Gray.respond(e.getMessage());
+        }
+    }
+
+    private static void createEvent(String input) {
+        try {
+            String description = Gray.inBetween(" ", "/from", input);
+            if (description.startsWith("/to")) {
+                description = "";
+            }
+            String start = Gray.inBetween("/from", "/to", input);
+            String[] temp = input.split("/to", 2);
+            String end;
+            if (temp.length == 2) {
+                end = temp[1].trim();
+            } else {
+                end = "";
+            }
+            Gray.checkEvent(description, start, end);
+            if (description.contains("/to")) {
+                throw new InvalidTaskException(TaskType.EVENT, MissingInfo.WRONG_ORDER);
+            }
+            Event event = new Event(description, start, end);
+            Gray.addTask(event);
+        } catch (InvalidTaskException e) {
+            Gray.respond(e.getMessage());
+        }
+    }
+
+    public static void delete(String[] inputParts) {
+        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+            try {
+                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
+                Gray.tasks.remove(Integer.parseInt(inputParts[1]) - 1);
+                if (Gray.tasks.isEmpty()) {
+                    Gray.respond("I've deleted this task:\n  " + task + "\n"
+                            + "You have no more tasks left!");
+                } else if (Gray.tasks.size() == 1) {
+                    Gray.respond("I've deleted this task:\n  " + task + "\n"
+                            + "You have 1 task in your list. All the best!");
+                } else {
+                    Gray.respond("I've deleted this task:\n  " + task + "\n" + "You have "
+                            + Gray.tasks.size() + " tasks in your list. All the best!");
+                }
+            } catch (IndexOutOfBoundsException e) {
+                Gray.respond("This task cannot be found!");
+            }
+        } else {
+            Gray.respond("Please give the index of the task to be deleted.");
+        }
+    }
+
+    public static void main(String[] args) {
+        File dataDir = new File("./data");
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+        File tasksFile = new File("./data/gray.txt");
+        if (!tasksFile.exists()) {
+            try {
+                tasksFile.createNewFile();
+            } catch (IOException e) {
+                Gray.respond("Sorry! I'm not able to create the file to store your tasks!");
+            }
+        }
+        try {
+            Scanner tasksFileScanner = new Scanner(tasksFile);
+            while (tasksFileScanner.hasNextLine()) {
+                String entry = tasksFileScanner.nextLine();
+                String[] parts = entry.split("\\|");
+                if (parts.length < 2) {
+                    throw new CorruptedFileException();
+                }
+                String type = parts[0].trim();
+                String mark = parts[1].trim();
+                if (!(mark.equals("0") || mark.equals("1"))) {
+                    throw new CorruptedFileException();
+                }
+                switch (type) {
+                    case "T" -> {
+                        if (parts.length != 3) {
+                            throw new CorruptedFileException();
+                        }
+                        String description = parts[2].trim();
+                        Todo todo = new Todo(description);
+                        Gray.tasks.add(todo);
+                        if (mark.equals("1")) {
+                            todo.markAsDone();
+                        }
+                    }
+                    case "D" -> {
+                        if (parts.length != 4) {
+                            throw new CorruptedFileException();
+                        }
+                        String description = parts[2].trim();
+                        String by = parts[3].trim();
+                        Deadline deadline = new Deadline(description, by);
+                        Gray.tasks.add(deadline);
+                        if (mark.equals("1")) {
+                            deadline.markAsDone();
+                        }
+                    }
+                    case "E" -> {
+                        if (parts.length != 5) {
+                            throw new CorruptedFileException();
+                        }
+                        String description = parts[2].trim();
+                        String start = parts[3].trim();
+                        String end = parts[4].trim();
+                        Event event = new Event(description, start, end);
+                        Gray.tasks.add(event);
+                        if (mark.equals("1")) {
+                            event.markAsDone();
+                        }
+                    }
+                    default -> throw new CorruptedFileException();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Gray.respond("This file is not present.");
+        } catch (CorruptedFileException e) {
+            Gray.respond(e.getMessage());
+            Gray.tasks.clear();
+        }
+        try {
+            FileWriter fileWriter = new FileWriter(tasksFile);
+            Gray.respond("""
+                Hi! I'm Gray, your personal assistant chatbot!
+                What can I do for you?""");
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNextLine()) {
+                String input = scanner.nextLine();
+                if (input.equals("bye")) {
+                    Gray.respond("Bye and see you soon!");
+                    break;
+                }
+                String[] inputParts = input.split(" ", 2);
+                Command command;
+                try {
+                    command = Command.valueOf(inputParts[0].toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    command = Command.INVALID;
+                }
+                switch (command) {
+                    case LIST -> Gray.list(inputParts);
+                    case MARK -> Gray.mark(inputParts);
+                    case UNMARK -> Gray.unmark(inputParts);
+                    case TODO -> Gray.createTodo(inputParts);
+                    case DEADLINE -> Gray.createDeadline(inputParts);
+                    case EVENT -> Gray.createEvent(input);
+                    case DELETE -> Gray.delete(inputParts);
+                    default -> Gray.respond("""
+                            I don't understand what you mean.
+                            Please enter a valid instruction.""");
+                }
+            }
+            for (Task task : Gray.tasks) {
+                fileWriter.write(task.toStorage() + "\n");
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            Gray.respond("Sorry! I couldn't write to your tasks file!");
         }
     }
 }
