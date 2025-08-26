@@ -301,7 +301,7 @@ public class Gray {
             Gray.tasks.clear();
         }
         try {
-            FileWriter fileWriter = new FileWriter(tasksFile, true);
+            FileWriter fileWriter = new FileWriter(tasksFile);
             Gray.respond("""
                 Hi! I'm Gray, your personal assistant chatbot!
                 What can I do for you?""");
@@ -331,6 +331,9 @@ public class Gray {
                             I don't understand what you mean.
                             Please enter a valid instruction.""");
                 }
+            }
+            for (Task task : Gray.tasks) {
+                fileWriter.write(task.toStorage() + "\n");
             }
             fileWriter.close();
         } catch (IOException e) {
