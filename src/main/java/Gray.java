@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Gray {
     public enum Command {
@@ -47,22 +47,12 @@ public class Gray {
         }
     }
 
-    private static final ArrayList<Task> tasks = new ArrayList<>();
-
-    private static void respond(String input) {
-        String horizontalLine = "-------------------------------------------------------------------";
-        System.out.println(horizontalLine + "\n" + input + "\n" + horizontalLine);
-    }
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     private static void addTask(Task task) {
         Gray.tasks.add(task);
-        if (Gray.tasks.size() == 1) {
-            Gray.respond("I've added this task:\n  " + task + "\n"
-                    + "You have 1 task in your list. All the best!");
-        } else {
-            Gray.respond("I've added this task:\n  " + task + "\n" + "You have "
-                    + Gray.tasks.size() + " tasks in your list. All the best!");
-        }
+        Ui ui = new Ui();
+        ui.showAddTask(task, Gray.tasks.size());
     }
     
     private static String inBetween(String str1, String str2, String target) {
@@ -96,56 +86,46 @@ public class Gray {
     }
 
     private static void list(String[] inputParts) {
+        Ui ui = new Ui();
         if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
-            Gray.respond("""
-                                I don't understand what you mean.
-                                Please enter a valid instruction.""");
+            ui.showInvalidInstruction();
         } else {
-            StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
-            if (Gray.tasks.isEmpty()) {
-                Gray.respond("Nice! You don't have any tasks left!");
-            } else {
-                for (int i = 0; i < Gray.tasks.size(); i++) {
-                    if (i != 0) {
-                        taskList.append("\n");
-                    }
-                    Task task = Gray.tasks.get(i);
-                    taskList.append(i + 1).append(".").append(task);
-                }
-                Gray.respond(taskList.toString());
-            }
+            ui.showTasks(Gray.tasks);
         }
     }
 
     private static void mark(String[] inputParts) {
+        Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
                 Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
                 task.markAsDone();
-                Gray.respond("I have marked this task as done:\n  " + task);
+                ui.showMarkTask(task);
             } catch (IndexOutOfBoundsException e) {
-                Gray.respond("This task cannot be found!");
+                ui.showTaskNotFound();
             }
         } else {
-            Gray.respond("Please give the index of the task to be marked.");
+            ui.showNoIndex();
         }
     }
 
     private static void unmark(String[] inputParts) {
+        Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
                 Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
                 task.markAsNotDone();
-                Gray.respond("I have marked this task as not done:\n  " + task);
+                ui.showUnmarkTask(task);
             } catch (IndexOutOfBoundsException e) {
-                Gray.respond("This task cannot be found!");
+                ui.showTaskNotFound();
             }
         } else {
-            Gray.respond("Please give the index of the task to be unmarked.");
+            ui.showNoIndex();
         }
     }
 
     private static void createTodo(String[] inputParts) {
+        Ui ui = new Ui();
         String description;
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
@@ -155,11 +135,12 @@ public class Gray {
             Todo todo = new Todo(description);
             Gray.addTask(todo);
         } catch (InvalidTaskException e) {
-            Gray.respond(e.getMessage());
+            ui.showInvalidTaskException(e);
         }
     }
 
     private static void createDeadline(String[] inputParts) {
+        Ui ui = new Ui();
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
@@ -180,16 +161,15 @@ public class Gray {
                 Deadline deadline = new Deadline(description, by);
                 Gray.addTask(deadline);
             } catch (DateTimeParseException e) {
-                Gray.respond("""
-                            Invalid due date and time!
-                            Please use the format yyyy-MM-dd HHmm.""");
+                ui.showInvalidDateAndTime();
             }
         } catch (InvalidTaskException e) {
-            Gray.respond(e.getMessage());
+            ui.showInvalidTaskException(e);
         }
     }
 
     private static void createEvent(String input) {
+        Ui ui = new Ui();
         try {
             String description = Gray.inBetween(" ", "/from", input);
             if (description.startsWith("/to")) {
@@ -215,41 +195,32 @@ public class Gray {
                 Event event = new Event(description, startDate, endDate);
                 Gray.addTask(event);
             } catch (DateTimeParseException e) {
-                Gray.respond("""
-                            Invalid due date and time!
-                            Please use the format yyyy-MM-dd HHmm.""");
+                ui.showInvalidDateAndTime();
             }
         } catch (InvalidTaskException e) {
-            Gray.respond(e.getMessage());
+            ui.showInvalidTaskException(e);
         }
     }
 
     public static void delete(String[] inputParts) {
+        Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
                 Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
                 Gray.tasks.remove(Integer.parseInt(inputParts[1]) - 1);
-                if (Gray.tasks.isEmpty()) {
-                    Gray.respond("I've deleted this task:\n  " + task + "\n"
-                            + "You have no more tasks left!");
-                } else if (Gray.tasks.size() == 1) {
-                    Gray.respond("I've deleted this task:\n  " + task + "\n"
-                            + "You have 1 task in your list. All the best!");
-                } else {
-                    Gray.respond("I've deleted this task:\n  " + task + "\n" + "You have "
-                            + Gray.tasks.size() + " tasks in your list. All the best!");
-                }
+                ui.showDeleteTask(task, Gray.tasks.size());
             } catch (IndexOutOfBoundsException e) {
-                Gray.respond("This task cannot be found!");
+                ui.showTaskNotFound();
             }
         } else {
-            Gray.respond("Please give the index of the task to be deleted.");
+            ui.showNoIndex();
         }
     }
 
     public static void getTasksOn(String[] inputParts) {
+        Ui ui = new Ui();
         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-            Gray.respond("Please give a date.");
+            ui.showNoDate();
             return;
         }
         LocalDate date;
@@ -267,26 +238,14 @@ public class Gray {
                     }
                 }
             }
-            if (tasksFound.isEmpty()) {
-                Gray.respond("There are no tasks on this date.");
-            } else {
-                StringBuilder taskList = new StringBuilder("Here are the tasks found on "
-                        + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n");
-                for (int i = 0; i < tasksFound.size(); i++) {
-                    if (i != 0) {
-                        taskList.append("\n");
-                    }
-                    Task task = tasksFound.get(i);
-                    taskList.append(i + 1).append(".").append(task);
-                }
-                Gray.respond(taskList.toString());
-            }
+            ui.showTasksOnDate(tasksFound, date);
         } catch (DateTimeParseException e) {
-            Gray.respond("Invalid date! Please use the format yyyy-MM-dd.");
+            ui.showInvalidDate();
         }
     }
 
     public static void main(String[] args) {
+        Ui ui = new Ui();
         File dataDir = new File("./data");
         if (!dataDir.exists()) {
             dataDir.mkdir();
@@ -296,7 +255,7 @@ public class Gray {
             try {
                 tasksFile.createNewFile();
             } catch (IOException e) {
-                Gray.respond("Sorry! I'm not able to create the file to store your tasks!");
+                ui.showFileCreationError();
             }
         }
         try {
@@ -365,21 +324,19 @@ public class Gray {
                 }
             }
         } catch (FileNotFoundException e) {
-            Gray.respond("This file is not present.");
+            ui.showNoFile();
         } catch (CorruptedFileException e) {
-            Gray.respond(e.getMessage());
+            ui.showLoadingError(e);
             Gray.tasks.clear();
         }
         try {
             FileWriter fileWriter = new FileWriter(tasksFile);
-            Gray.respond("""
-                Hi! I'm Gray, your personal assistant chatbot!
-                What can I do for you?""");
+            ui.showWelcome();
             Scanner scanner = new Scanner(System.in);
             while (scanner.hasNextLine()) {
                 String input = scanner.nextLine();
                 if (input.equals("bye")) {
-                    Gray.respond("Bye and see you soon!");
+                    ui.showGoodbye();
                     break;
                 }
                 String[] inputParts = input.split(" ", 2);
@@ -398,9 +355,7 @@ public class Gray {
                     case EVENT -> Gray.createEvent(input);
                     case DELETE -> Gray.delete(inputParts);
                     case DATE -> Gray.getTasksOn(inputParts);
-                    default -> Gray.respond("""
-                            I don't understand what you mean.
-                            Please enter a valid instruction.""");
+                    default -> ui.showInvalidInstruction();
                 }
             }
             for (Task task : Gray.tasks) {
@@ -408,7 +363,7 @@ public class Gray {
             }
             fileWriter.close();
         } catch (IOException e) {
-            Gray.respond("Sorry! I couldn't write to your tasks file!");
+            ui.showWriteFileError();
         }
     }
 }

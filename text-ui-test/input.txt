@@ -8,10 +8,10 @@ mark two
 unmark three
 delete one
 todo borrow book
-deadline return book /by Sunday
+deadline return book /by 2025-08-25 2359
 list
-event project meeting /from Mon 2pm /to 4pm
-deadline do homework /by no idea :-p
+event project meeting /from 2025-08-29 1400 /to 2025-08-29 1600
+deadline do homework /by 2025-08-29 1600
 list
 mark 1
 list
@@ -34,17 +34,24 @@ todo
 deadline
 deadline return book
 deadline /by
-deadline /by Sunday
+deadline /by 2025-08-25 2359
 deadline return book /by
 event
 event   /from   /to
 event marathon
 event marathon /from   /to
-event    /from 8am
-event    /to 10am
-event    /from 8am /to 10am
-event marathon /from 8am
-event marathon /from 8am /to
-event marathon /to 10am
-event marathon /from  /to 10am
-event marathon /to 10am /from 8am
+event    /from 2025-08-25 2359
+event    /to 2025-08-25 2359
+event    /from 2025-08-25 2359 /to 2025-08-25 2359
+event marathon /from 2025-08-25 2359
+event marathon /from 2025-08-25 2359 /to
+event marathon /to 2025-08-25 2359
+event marathon /from  /to 2025-08-25 2359
+event marathon /to 2025-08-25 2359 /from 2025-08-25 2359
+deadline return book /by 2025-13-12 1900
+event marathon /from 2025-13-25 2359 /to 2025-08-25 2359
+date
+date 2025-08-
+date 2025-08-26
+date 2025-08-29
+bye

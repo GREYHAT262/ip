@@ -23,13 +23,13 @@ This task cannot be found!
 This task cannot be found!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
-Please give the index of the task to be marked.
+Please give the index of the task.
 -------------------------------------------------------------------
 -------------------------------------------------------------------
-Please give the index of the task to be unmarked.
+Please give the index of the task.
 -------------------------------------------------------------------
 -------------------------------------------------------------------
-Please give the index of the task to be deleted.
+Please give the index of the task.
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I've added this task:
@@ -38,30 +38,30 @@ You have 1 task in your list. All the best!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: 2359, Aug 25 2025)
 You have 2 tasks in your list. All the best!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
 You have 3 tasks in your list. All the best!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I've added this task:
-  [D][ ] do homework (by: no idea :-p)
+  [D][ ] do homework (by: 1600, Aug 29 2025)
 You have 4 tasks in your list. All the best!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I have marked this task as done:
@@ -70,42 +70,42 @@ I have marked this task as done:
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I have marked this task as done:
-  [D][X] return book (by: Sunday)
+  [D][X] return book (by: 2359, Aug 25 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][X] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][X] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I have marked this task as not done:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: 2359, Aug 25 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I have marked this task as not done:
-  [D][ ] do homework (by: no idea :-p)
+  [D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I have marked this task as done:
@@ -114,9 +114,9 @@ I have marked this task as done:
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 This task cannot be found!
@@ -124,9 +124,9 @@ This task cannot be found!
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 This task cannot be found!
@@ -134,9 +134,9 @@ This task cannot be found!
 -------------------------------------------------------------------
 Here are your tasks:
 1.[T][X] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
+2.[D][ ] return book (by: 2359, Aug 25 2025)
+3.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+4.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I've deleted this task:
@@ -145,9 +145,9 @@ You have 3 tasks in your list. All the best!
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Here are your tasks:
-1.[D][ ] return book (by: Sunday)
-2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-3.[D][ ] do homework (by: no idea :-p)
+1.[D][ ] return book (by: 2359, Aug 25 2025)
+2.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+3.[D][ ] do homework (by: 1600, Aug 29 2025)
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 I don't understand what you mean.
@@ -206,4 +206,29 @@ Please provide a start date/time for your event.
 -------------------------------------------------------------------
 -------------------------------------------------------------------
 Please provide a correct ordering of information for your event.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Invalid date and time!
+Please use the format yyyy-MM-dd HHmm.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Invalid date and time!
+Please use the format yyyy-MM-dd HHmm.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Please give a date.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Invalid date! Please use the format yyyy-MM-dd.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+There are no tasks on this date.
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Here are the tasks found on Aug 29 2025:
+1.[E][ ] project meeting (from: 1400, Aug 29 2025 to: 1600, Aug 29 2025)
+2.[D][ ] do homework (by: 1600, Aug 29 2025)
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Bye and see you soon!
 -------------------------------------------------------------------
