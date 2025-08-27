@@ -2,12 +2,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Gray {
     public enum Command {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, INVALID;
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
     }
 
     public enum TaskType {
@@ -156,8 +160,6 @@ public class Gray {
     }
 
     private static void createDeadline(String[] inputParts) {
-        String description;
-        String by;
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DESCRIPTION_DUE);
@@ -171,10 +173,17 @@ public class Gray {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(TaskType.DEADLINE, MissingInfo.DUE);
             }
-            description = inputParts[0].trim();
-            by = inputParts[1].trim();
-            Deadline deadline = new Deadline(description, by);
-            Gray.addTask(deadline);
+            String description = inputParts[0].trim();
+            LocalDateTime by;
+            try {
+                by = LocalDateTime.parse(inputParts[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                Deadline deadline = new Deadline(description, by);
+                Gray.addTask(deadline);
+            } catch (DateTimeParseException e) {
+                Gray.respond("""
+                            Invalid due date and time!
+                            Please use the format yyyy-MM-dd HHmm.""");
+            }
         } catch (InvalidTaskException e) {
             Gray.respond(e.getMessage());
         }
@@ -198,8 +207,18 @@ public class Gray {
             if (description.contains("/to")) {
                 throw new InvalidTaskException(TaskType.EVENT, MissingInfo.WRONG_ORDER);
             }
-            Event event = new Event(description, start, end);
-            Gray.addTask(event);
+            LocalDateTime startDate;
+            LocalDateTime endDate;
+            try {
+                startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                Event event = new Event(description, startDate, endDate);
+                Gray.addTask(event);
+            } catch (DateTimeParseException e) {
+                Gray.respond("""
+                            Invalid due date and time!
+                            Please use the format yyyy-MM-dd HHmm.""");
+            }
         } catch (InvalidTaskException e) {
             Gray.respond(e.getMessage());
         }
@@ -225,6 +244,45 @@ public class Gray {
             }
         } else {
             Gray.respond("Please give the index of the task to be deleted.");
+        }
+    }
+
+    public static void getTasksOn(String[] inputParts) {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            Gray.respond("Please give a date.");
+            return;
+        }
+        LocalDate date;
+        try {
+            date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            ArrayList<Task> tasksFound = new ArrayList<>();
+            for (Task task : Gray.tasks) {
+                if (task instanceof Deadline deadline) {
+                    if (deadline.correctDateTime(date)) {
+                        tasksFound.add(deadline);
+                    }
+                } else if (task instanceof Event event) {
+                    if (event.correctDateTime(date)) {
+                        tasksFound.add(event);
+                    }
+                }
+            }
+            if (tasksFound.isEmpty()) {
+                Gray.respond("There are no tasks on this date.");
+            } else {
+                StringBuilder taskList = new StringBuilder("Here are the tasks found on "
+                        + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n");
+                for (int i = 0; i < tasksFound.size(); i++) {
+                    if (i != 0) {
+                        taskList.append("\n");
+                    }
+                    Task task = tasksFound.get(i);
+                    taskList.append(i + 1).append(".").append(task);
+                }
+                Gray.respond(taskList.toString());
+            }
+        } catch (DateTimeParseException e) {
+            Gray.respond("Invalid date! Please use the format yyyy-MM-dd.");
         }
     }
 
@@ -271,7 +329,12 @@ public class Gray {
                             throw new CorruptedFileException();
                         }
                         String description = parts[2].trim();
-                        String by = parts[3].trim();
+                        LocalDateTime by;
+                        try {
+                            by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                        } catch (DateTimeParseException e) {
+                            throw new CorruptedFileException();
+                        }
                         Deadline deadline = new Deadline(description, by);
                         Gray.tasks.add(deadline);
                         if (mark.equals("1")) {
@@ -283,8 +346,15 @@ public class Gray {
                             throw new CorruptedFileException();
                         }
                         String description = parts[2].trim();
-                        String start = parts[3].trim();
-                        String end = parts[4].trim();
+                        LocalDateTime start;
+                        LocalDateTime end;
+                        try {
+                            start = LocalDateTime.parse(parts[3].trim(),
+                                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                            end = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                        } catch (DateTimeParseException e) {
+                            throw new CorruptedFileException();
+                        }
                         Event event = new Event(description, start, end);
                         Gray.tasks.add(event);
                         if (mark.equals("1")) {
@@ -327,6 +397,7 @@ public class Gray {
                     case DEADLINE -> Gray.createDeadline(inputParts);
                     case EVENT -> Gray.createEvent(input);
                     case DELETE -> Gray.delete(inputParts);
+                    case DATE -> Gray.getTasksOn(inputParts);
                     default -> Gray.respond("""
                             I don't understand what you mean.
                             Please enter a valid instruction.""");
