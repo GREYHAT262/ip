@@ -1,13 +1,10 @@
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Gray {
     public enum Command {
@@ -246,95 +243,12 @@ public class Gray {
 
     public static void main(String[] args) {
         Ui ui = new Ui();
-        File dataDir = new File("./data");
-        if (!dataDir.exists()) {
-            dataDir.mkdir();
-        }
-        File tasksFile = new File("./data/gray.txt");
-        if (!tasksFile.exists()) {
-            try {
-                tasksFile.createNewFile();
-            } catch (IOException e) {
-                ui.showFileCreationError();
-            }
-        }
+        Storage storage = new Storage("./data/gray.txt");
         try {
-            Scanner tasksFileScanner = new Scanner(tasksFile);
-            while (tasksFileScanner.hasNextLine()) {
-                String entry = tasksFileScanner.nextLine();
-                String[] parts = entry.split("\\|");
-                if (parts.length < 2) {
-                    throw new CorruptedFileException();
-                }
-                String type = parts[0].trim();
-                String mark = parts[1].trim();
-                if (!(mark.equals("0") || mark.equals("1"))) {
-                    throw new CorruptedFileException();
-                }
-                switch (type) {
-                    case "T" -> {
-                        if (parts.length != 3) {
-                            throw new CorruptedFileException();
-                        }
-                        String description = parts[2].trim();
-                        Todo todo = new Todo(description);
-                        Gray.tasks.add(todo);
-                        if (mark.equals("1")) {
-                            todo.markAsDone();
-                        }
-                    }
-                    case "D" -> {
-                        if (parts.length != 4) {
-                            throw new CorruptedFileException();
-                        }
-                        String description = parts[2].trim();
-                        LocalDateTime by;
-                        try {
-                            by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptedFileException();
-                        }
-                        Deadline deadline = new Deadline(description, by);
-                        Gray.tasks.add(deadline);
-                        if (mark.equals("1")) {
-                            deadline.markAsDone();
-                        }
-                    }
-                    case "E" -> {
-                        if (parts.length != 5) {
-                            throw new CorruptedFileException();
-                        }
-                        String description = parts[2].trim();
-                        LocalDateTime start;
-                        LocalDateTime end;
-                        try {
-                            start = LocalDateTime.parse(parts[3].trim(),
-                                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                            end = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                        } catch (DateTimeParseException e) {
-                            throw new CorruptedFileException();
-                        }
-                        Event event = new Event(description, start, end);
-                        Gray.tasks.add(event);
-                        if (mark.equals("1")) {
-                            event.markAsDone();
-                        }
-                    }
-                    default -> throw new CorruptedFileException();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            ui.showNoFile();
-        } catch (CorruptedFileException e) {
-            ui.showLoadingError(e);
-            Gray.tasks.clear();
-        }
-        try {
-            FileWriter fileWriter = new FileWriter(tasksFile);
+            Gray.tasks = storage.load();
             ui.showWelcome();
-            Scanner scanner = new Scanner(System.in);
-            while (scanner.hasNextLine()) {
-                String input = scanner.nextLine();
+            while (true) {
+                String input = ui.readCommand();
                 if (input.equals("bye")) {
                     ui.showGoodbye();
                     break;
@@ -358,12 +272,14 @@ public class Gray {
                     default -> ui.showInvalidInstruction();
                 }
             }
-            for (Task task : Gray.tasks) {
-                fileWriter.write(task.toStorage() + "\n");
-            }
-            fileWriter.close();
+            storage.save(Gray.tasks);
+        } catch (FileNotFoundException e) {
+            ui.showNoFile();
         } catch (IOException e) {
             ui.showWriteFileError();
+        } catch (CorruptedFileException e) {
+            ui.showLoadingError(e);
+            Gray.tasks.clear();
         }
     }
 }
