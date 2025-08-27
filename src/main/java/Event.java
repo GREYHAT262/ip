@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -9,6 +10,11 @@ public class Event extends Task {
         super(description);
         this.start = start;
         this.end = end;
+    }
+
+    public boolean correctDateTime(LocalDate dateTime) {
+        return this.start.getDayOfMonth() == dateTime.getDayOfMonth()
+                || this.end.getDayOfMonth() == dateTime.getDayOfMonth();
     }
 
     @Override

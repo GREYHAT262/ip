@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 public class Gray {
     public enum Command {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, INVALID;
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
     }
 
     public enum TaskType {
@@ -246,6 +247,45 @@ public class Gray {
         }
     }
 
+    public static void getTasksOn(String[] inputParts) {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            Gray.respond("Please give a date.");
+            return;
+        }
+        LocalDate date;
+        try {
+            date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            ArrayList<Task> tasksFound = new ArrayList<>();
+            for (Task task : Gray.tasks) {
+                if (task instanceof Deadline deadline) {
+                    if (deadline.correctDateTime(date)) {
+                        tasksFound.add(deadline);
+                    }
+                } else if (task instanceof Event event) {
+                    if (event.correctDateTime(date)) {
+                        tasksFound.add(event);
+                    }
+                }
+            }
+            if (tasksFound.isEmpty()) {
+                Gray.respond("There are no tasks on this date.");
+            } else {
+                StringBuilder taskList = new StringBuilder("Here are the tasks found on "
+                        + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n");
+                for (int i = 0; i < tasksFound.size(); i++) {
+                    if (i != 0) {
+                        taskList.append("\n");
+                    }
+                    Task task = tasksFound.get(i);
+                    taskList.append(i + 1).append(".").append(task);
+                }
+                Gray.respond(taskList.toString());
+            }
+        } catch (DateTimeParseException e) {
+            Gray.respond("Invalid date! Please use the format yyyy-MM-dd.");
+        }
+    }
+
     public static void main(String[] args) {
         File dataDir = new File("./data");
         if (!dataDir.exists()) {
@@ -357,6 +397,7 @@ public class Gray {
                     case DEADLINE -> Gray.createDeadline(inputParts);
                     case EVENT -> Gray.createEvent(input);
                     case DELETE -> Gray.delete(inputParts);
+                    case DATE -> Gray.getTasksOn(inputParts);
                     default -> Gray.respond("""
                             I don't understand what you mean.
                             Please enter a valid instruction.""");
