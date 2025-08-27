@@ -2,7 +2,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 public class Parser {
     public enum Command {
@@ -44,10 +43,10 @@ public class Parser {
 
     public static boolean isExit = false;
 
-    private static void addTask(Task task) {
-        Gray.tasks.add(task);
+    private static void add(TaskList taskList, Task task) {
+        taskList.add(task);
         Ui ui = new Ui();
-        ui.showAddTask(task, Gray.tasks.size());
+        ui.showAddTask(task, taskList.size());
     }
 
     private static String inBetween(String str1, String str2, String target) {
@@ -80,22 +79,22 @@ public class Parser {
         }
     }
 
-    private static void list(String[] inputParts) {
+    private static void list(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
             ui.showInvalidInstruction();
         } else {
-            ui.showTasks(Gray.tasks);
+            ui.showTasks(taskList);
         }
     }
 
-    private static void mark(String[] inputParts) {
+    private static void mark(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
-                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                task.markAsDone();
-                ui.showMarkTask(task);
+                int index = Integer.parseInt(inputParts[1]) - 1;
+                taskList.mark(index);
+                ui.showMarkTask(taskList.get(index));
             } catch (IndexOutOfBoundsException e) {
                 ui.showTaskNotFound();
             }
@@ -104,13 +103,13 @@ public class Parser {
         }
     }
 
-    private static void unmark(String[] inputParts) {
+    private static void unmark(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
-                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                task.markAsNotDone();
-                ui.showUnmarkTask(task);
+                int index = Integer.parseInt(inputParts[1]) - 1;
+                taskList.unmark(index);
+                ui.showUnmarkTask(taskList.get(index));
             } catch (IndexOutOfBoundsException e) {
                 ui.showTaskNotFound();
             }
@@ -119,7 +118,7 @@ public class Parser {
         }
     }
 
-    private static void createTodo(String[] inputParts) {
+    private static void createTodo(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         String description;
         try {
@@ -128,13 +127,13 @@ public class Parser {
             }
             description = inputParts[1];
             Todo todo = new Todo(description);
-            Parser.addTask(todo);
+            Parser.add(taskList, todo);
         } catch (InvalidTaskException e) {
             ui.showInvalidTaskException(e);
         }
     }
 
-    private static void createDeadline(String[] inputParts) {
+    private static void createDeadline(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
@@ -154,7 +153,7 @@ public class Parser {
             try {
                 by = LocalDateTime.parse(inputParts[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
                 Deadline deadline = new Deadline(description, by);
-                Parser.addTask(deadline);
+                Parser.add(taskList, deadline);
             } catch (DateTimeParseException e) {
                 ui.showInvalidDateAndTime();
             }
@@ -163,7 +162,7 @@ public class Parser {
         }
     }
 
-    private static void createEvent(String input) {
+    private static void createEvent(TaskList taskList, String input) {
         Ui ui = new Ui();
         try {
             String description = Parser.inBetween(" ", "/from", input);
@@ -188,7 +187,7 @@ public class Parser {
                 startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
                 endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
                 Event event = new Event(description, startDate, endDate);
-                Parser.addTask(event);
+                Parser.add(taskList, event);
             } catch (DateTimeParseException e) {
                 ui.showInvalidDateAndTime();
             }
@@ -197,13 +196,12 @@ public class Parser {
         }
     }
 
-    private static void delete(String[] inputParts) {
+    private static void delete(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
             try {
-                Task task = Gray.tasks.get(Integer.parseInt(inputParts[1]) - 1);
-                Gray.tasks.remove(Integer.parseInt(inputParts[1]) - 1);
-                ui.showDeleteTask(task, Gray.tasks.size());
+                int index = Integer.parseInt(inputParts[1]) - 1;
+                ui.showDeleteTask(taskList.delete(index), taskList.size());
             } catch (IndexOutOfBoundsException e) {
                 ui.showTaskNotFound();
             }
@@ -212,7 +210,7 @@ public class Parser {
         }
     }
 
-    private static void getTasksOn(String[] inputParts) {
+    private static void getTasksOn(TaskList taskList, String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
             ui.showNoDate();
@@ -221,25 +219,13 @@ public class Parser {
         LocalDate date;
         try {
             date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            ArrayList<Task> tasksFound = new ArrayList<>();
-            for (Task task : Gray.tasks) {
-                if (task instanceof Deadline deadline) {
-                    if (deadline.correctDateTime(date)) {
-                        tasksFound.add(deadline);
-                    }
-                } else if (task instanceof Event event) {
-                    if (event.correctDateTime(date)) {
-                        tasksFound.add(event);
-                    }
-                }
-            }
-            ui.showTasksOnDate(tasksFound, date);
+            ui.showTasksOnDate(taskList.filterByDate(date), date);
         } catch (DateTimeParseException e) {
             ui.showInvalidDate();
         }
     }
 
-    public static void parse(String input) {
+    public static void parse(TaskList taskList, String input) {
         Ui ui = new Ui();
         if (input.equals("bye")) {
             ui.showGoodbye();
@@ -254,14 +240,14 @@ public class Parser {
             command = Parser.Command.INVALID;
         }
         switch (command) {
-            case LIST -> Parser.list(inputParts);
-            case MARK -> Parser.mark(inputParts);
-            case UNMARK -> Parser.unmark(inputParts);
-            case TODO -> Parser.createTodo(inputParts);
-            case DEADLINE -> Parser.createDeadline(inputParts);
-            case EVENT -> Parser.createEvent(input);
-            case DELETE -> Parser.delete(inputParts);
-            case DATE -> Parser.getTasksOn(inputParts);
+            case LIST -> Parser.list(taskList, inputParts);
+            case MARK -> Parser.mark(taskList, inputParts);
+            case UNMARK -> Parser.unmark(taskList, inputParts);
+            case TODO -> Parser.createTodo(taskList, inputParts);
+            case DEADLINE -> Parser.createDeadline(taskList, inputParts);
+            case EVENT -> Parser.createEvent(taskList, input);
+            case DELETE -> Parser.delete(taskList, inputParts);
+            case DATE -> Parser.getTasksOn(taskList, inputParts);
             default -> ui.showInvalidInstruction();
         }
     }

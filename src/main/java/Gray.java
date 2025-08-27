@@ -1,22 +1,21 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Gray {
     private final Ui ui;
     private final Storage storage;
-    public static ArrayList<Task> tasks;
+    private TaskList tasks;
 
     public Gray(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
         try {
-            Gray.tasks = storage.load();
+            this.tasks = new TaskList(storage.load());
         } catch (FileNotFoundException e) {
             ui.showNoFile();
         } catch (CorruptedFileException e) {
             ui.showLoadingError(e);
-            Gray.tasks.clear();
+            this.tasks = new TaskList();
         }
     }
 
@@ -26,8 +25,8 @@ public class Gray {
         while (!isExit) {
             try {
                 String input = ui.readCommand();
-                Parser.parse(input);
-                this.storage.save(Gray.tasks);
+                Parser.parse(this.tasks, input);
+                this.storage.save(this.tasks);
                 isExit = Parser.isExit;
             } catch (IOException e) {
                 this.ui.showWriteFileError();

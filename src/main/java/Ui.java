@@ -54,19 +54,11 @@ public class Ui {
         }
     }
 
-    public void showTasks(ArrayList<Task> tasks) {
-        StringBuilder taskList = new StringBuilder("Here are your tasks:\n");
-        if (tasks.isEmpty()) {
+    public void showTasks(TaskList taskList) {
+        if (taskList.size() == 0) {
             Ui.respond("Nice! You don't have any tasks left!");
         } else {
-            for (int i = 0; i < tasks.size(); i++) {
-                if (i != 0) {
-                    taskList.append("\n");
-                }
-                Task task = tasks.get(i);
-                taskList.append(i + 1).append(".").append(task);
-            }
-            Ui.respond(taskList.toString());
+            Ui.respond("Here are your tasks:\n" + taskList);
         }
     }
 
@@ -100,20 +92,13 @@ public class Ui {
         Ui.respond("Please give a date.");
     }
 
-    public void showTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
-        if (tasks.isEmpty()) {
+    public void showTasksOnDate(TaskList taskList, LocalDate date) {
+        if (taskList.size() == 0) {
             Ui.respond("There are no tasks on this date.");
         } else {
-            StringBuilder taskList = new StringBuilder("Here are the tasks found on "
-                    + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n");
-            for (int i = 0; i < tasks.size(); i++) {
-                if (i != 0) {
-                    taskList.append("\n");
-                }
-                Task task = tasks.get(i);
-                taskList.append(i + 1).append(".").append(task);
-            }
-            Ui.respond(taskList.toString());
+            String taskString = "Here are the tasks found on "
+                    + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n" + taskList;
+            Ui.respond(taskString);
         }
     }
 

@@ -99,11 +99,9 @@ public class Storage {
         return tasks;
     }
 
-    public void save(ArrayList<Task> tasks) throws IOException {
+    public void save(TaskList taskList) throws IOException {
         this.fileWriter = new FileWriter(this.file);
-        for (Task task : tasks) {
-            this.fileWriter.write(task.toStorage() + "\n");
-        }
+        this.fileWriter.write(taskList.toStorage());
         this.fileWriter.close();
     }
 }
