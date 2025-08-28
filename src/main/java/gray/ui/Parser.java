@@ -86,10 +86,12 @@ public class Parser {
         }
     }
 
-    private static ListCommand list(String[] inputParts) {
-        Ui ui = new Ui();
-        boolean isValid = inputParts.length == 1 || inputParts[1].trim().isEmpty();
-        return new ListCommand(isValid);
+    private static Command list(String[] inputParts) {
+        if (inputParts.length == 1 || inputParts[1].trim().isEmpty()) {
+            return new ListCommand();
+        } else {
+            return new InvalidCommand();
+        }
     }
 
     private static MarkCommand mark(String[] inputParts) {
@@ -159,7 +161,6 @@ public class Parser {
     }
 
     private static AddCommand createEvent(String input) {
-        Ui ui = new Ui();
         try {
             String description = Parser.inBetween(" ", "/from", input);
             if (description.startsWith("/to")) {
@@ -189,7 +190,6 @@ public class Parser {
     }
 
     private static DateCommand getTasksOn(String[] inputParts) {
-        Ui ui = new Ui();
         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
             return new DateCommand(false);
         }

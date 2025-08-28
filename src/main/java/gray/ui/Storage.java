@@ -19,7 +19,6 @@ import java.util.Scanner;
 public class Storage {
     File file;
     FileWriter fileWriter;
-    Ui ui;
 
     public Storage(Ui ui, String filePath) {
         int idx = filePath.lastIndexOf("/");
@@ -33,7 +32,7 @@ public class Storage {
             try {
                 this.file.createNewFile();
             } catch (IOException e) {
-                this.ui.showFileCreationError();
+                ui.showFileCreationError();
             }
         }
     }
