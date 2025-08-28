@@ -11,7 +11,7 @@ public class TaskList {
     }
 
     public TaskList() {
-        this.taskList = new ArrayList<Task>();
+        this.taskList = new ArrayList<>();
     }
 
     public Task get(int index) {
@@ -54,6 +54,14 @@ public class TaskList {
         return filtered;
     }
 
+    public String toStorage() {
+        StringBuilder taskString = new StringBuilder();
+        for (Task task : this.taskList) {
+            taskString.append(task.toStorage()).append("\n");
+        }
+        return taskString.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder taskString = new StringBuilder();
@@ -63,14 +71,6 @@ public class TaskList {
             }
             Task task = this.taskList.get(i);
             taskString.append(i + 1).append(".").append(task);
-        }
-        return taskString.toString();
-    }
-
-    public String toStorage() {
-        StringBuilder taskString = new StringBuilder();
-        for (Task task : this.taskList) {
-            taskString.append(task.toStorage()).append("\n");
         }
         return taskString.toString();
     }
