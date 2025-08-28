@@ -1,9 +1,10 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-import java.io.IOException;
 
 /**
  * Marks a task as done.
@@ -18,7 +19,7 @@ public class MarkCommand extends Command {
      */
     public MarkCommand(int index) {
         this.index = index;
-        this.isValid = true;
+        isValid = true;
     }
 
     /**
@@ -26,12 +27,12 @@ public class MarkCommand extends Command {
      * If index is invalid.
      */
     public MarkCommand() {
-        this.isValid = false;
+        isValid = false;
     }
 
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
-        if (!this.isValid) {
+        if (!isValid) {
             ui.showNoIndex();
             return;
         }

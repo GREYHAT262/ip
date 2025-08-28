@@ -1,12 +1,13 @@
 package gray.ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
 import gray.exception.CorruptedFileException;
 import gray.exception.InvalidTaskException;
 import gray.task.Task;
 import gray.task.TaskList;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 /**
  * Prints chatbot responses onto the screen.
@@ -18,7 +19,7 @@ public class Ui {
      * Creates a new Ui.
      */
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
 
     /**
@@ -202,6 +203,6 @@ public class Ui {
      * @return User command.
      */
     public String readCommand() {
-        return this.scanner.nextLine();
+        return scanner.nextLine();
     }
 }

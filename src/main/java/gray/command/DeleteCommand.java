@@ -1,9 +1,10 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-import java.io.IOException;
 
 /**
  * Deletes a task from a list of tasks.
@@ -18,7 +19,7 @@ public class DeleteCommand extends Command {
      */
     public DeleteCommand(int index) {
         this.index = index;
-        this.isValid = true;
+        isValid = true;
     }
 
     /**
@@ -26,12 +27,12 @@ public class DeleteCommand extends Command {
      * If index is invalid.
      */
     public DeleteCommand() {
-        this.isValid = false;
+        isValid = false;
     }
 
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
-        if (!this.isValid) {
+        if (!isValid) {
             ui.showNoIndex();
             return;
         }

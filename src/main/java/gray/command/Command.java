@@ -1,9 +1,10 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-import java.io.IOException;
 
 /**
  * Represents a generic user command.

@@ -1,11 +1,12 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.exception.InvalidTaskException;
 import gray.task.Task;
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-import java.io.IOException;
 
 /**
  * Adds a task to a list of tasks.
@@ -22,8 +23,8 @@ public class AddCommand extends Command {
      */
     public AddCommand(Task task) {
         this.task = task;
-        this.isValid = true;
-        this.isValidDateTime = true;
+        isValid = true;
+        isValidDateTime = true;
     }
 
     /**
@@ -31,8 +32,8 @@ public class AddCommand extends Command {
      * If there are missing arguments leading to an invalid task.
      */
     public AddCommand(InvalidTaskException e) {
-        this.isValid = false;
-        this.isValidDateTime = true;
+        isValid = false;
+        isValidDateTime = true;
         this.e = e;
     }
 
@@ -41,8 +42,8 @@ public class AddCommand extends Command {
      * If the date and time is invalid.
      */
     public AddCommand() {
-        this.isValid = false;
-        this.isValidDateTime = false;
+        isValid = false;
+        isValidDateTime = false;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class AddCommand extends Command {
             if (!isValidDateTime) {
                 ui.showInvalidDateAndTime();
             } else {
-                ui.showInvalidTaskException(this.e);
+                ui.showInvalidTaskException(e);
             }
             return;
         }

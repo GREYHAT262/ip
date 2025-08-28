@@ -24,25 +24,25 @@ public class Task {
      * Marks the task as done.
      */
     public void markAsDone() {
-        this.isDone = true;
+        isDone = true;
     }
 
     /**
      * Marks the task as not done.
      */
     public void markAsNotDone() {
-        this.isDone = false;
+        isDone = false;
     }
 
     @Override
     public String toString() {
-        return "[" + this.getStatusIcon() + "] " + this.description;
+        return "[" + this.getStatusIcon() + "] " + description;
     }
 
     /**
      * Converts task to a string in the format used for storage.
      */
     public String toStorage() {
-        return " | " + (isDone ? "1" : "0") + " | " + this.description;
+        return " | " + (isDone ? "1" : "0") + " | " + description;
     }
 }

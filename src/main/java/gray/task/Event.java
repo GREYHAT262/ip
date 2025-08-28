@@ -25,20 +25,20 @@ public class Event extends Task {
      * Checks if event occurs on the specified date.
      */
     public boolean correctDate(LocalDate date) {
-        return this.start.getDayOfMonth() == date.getDayOfMonth()
-                || this.end.getDayOfMonth() == date.getDayOfMonth();
+        return start.getDayOfMonth() == date.getDayOfMonth()
+                || end.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " +
-                this.start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " to: "
-                + this.end.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
+        return "[E]" + super.toString() + " (from: "
+                + start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " to: "
+                + end.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
     }
 
     @Override
     public String toStorage() {
-        return "E" + super.toStorage() + " | " + this.start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
-                + " | " + this.end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return "E" + super.toStorage() + " | " + start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
+                + " | " + end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }

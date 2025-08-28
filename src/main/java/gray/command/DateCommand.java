@@ -1,9 +1,10 @@
 package gray.command;
 
+import java.time.LocalDate;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-import java.time.LocalDate;
 
 /**
  * Finds tasks of a specified date.
@@ -19,8 +20,8 @@ public class DateCommand extends Command {
      */
     public DateCommand(LocalDate date) {
         this.date = date;
-        this.hasDate = true;
-        this.isValid = true;
+        hasDate = true;
+        isValid = true;
     }
 
     /**
@@ -29,15 +30,15 @@ public class DateCommand extends Command {
      */
     public DateCommand(boolean hasDate) {
         this.hasDate = hasDate;
-        this.isValid = !this.hasDate;
+        isValid = !hasDate;
     }
 
     @Override
     public void execute(TaskList taskList, Ui ui, Storage storage) {
-        if (!this.hasDate) {
+        if (!hasDate) {
             ui.showNoDate();
             return;
-        } else if (!this.isValid) {
+        } else if (!isValid) {
             ui.showInvalidDate();
             return;
         }

@@ -1,6 +1,10 @@
 package gray.ui;
 
-import gray.exception.InvalidTaskException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import gray.command.AddCommand;
 import gray.command.ByeCommand;
 import gray.command.Command;
@@ -10,13 +14,10 @@ import gray.command.InvalidCommand;
 import gray.command.ListCommand;
 import gray.command.MarkCommand;
 import gray.command.UnmarkCommand;
+import gray.exception.InvalidTaskException;
 import gray.task.Deadline;
 import gray.task.Event;
 import gray.task.Todo;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 /**
  * Parses user input into different command types.
@@ -41,7 +42,7 @@ public class Parser {
             this.taskType = taskType;
         }
         public String getTaskType() {
-            return this.taskType;
+            return taskType;
         }
     }
 
@@ -64,7 +65,7 @@ public class Parser {
             this.missingInfo = missingInfo;
         }
         public String getMissingInfo() {
-            return this.missingInfo;
+            return missingInfo;
         }
     }
 

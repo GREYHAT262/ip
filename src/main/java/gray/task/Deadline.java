@@ -23,17 +23,17 @@ public class Deadline extends Task {
      * Checks if deadline occurs on the specified date.
      */
     public boolean correctDate(LocalDate date) {
-        return this.by.getDayOfMonth() == date.getDayOfMonth();
+        return by.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: "
-                + this.by.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
+                + by.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
     }
 
     @Override
     public String toStorage() {
-        return "D" + super.toStorage() + " | " + this.by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return "D" + super.toStorage() + " | " + by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }

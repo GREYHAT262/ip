@@ -1,17 +1,17 @@
 package gray.task;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class TaskListTest {
-    Todo todo = new Todo("borrow book");
-    Deadline deadline = new Deadline("return book",
+    private final Todo todo = new Todo("borrow book");
+    private final Deadline deadline = new Deadline("return book",
             LocalDateTime.of(2025, 8, 26, 23, 59));
-    Event event = new Event("CTF", LocalDateTime.of(2025, 8, 26, 9, 0),
+    private final Event event = new Event("CTF", LocalDateTime.of(2025, 8, 26, 9, 0),
             LocalDateTime.of(2025, 8, 27, 21, 0));
 
     @Test
