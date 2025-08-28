@@ -11,8 +11,9 @@ import java.util.Scanner;
 public class Storage {
     File file;
     FileWriter fileWriter;
+    Ui ui;
 
-    public Storage(String filePath) {
+    public Storage(Ui ui, String filePath) {
         int idx = filePath.lastIndexOf("/");
         String directoryPath = filePath.substring(0, idx);
         File directory = new File(directoryPath);
@@ -24,8 +25,7 @@ public class Storage {
             try {
                 this.file.createNewFile();
             } catch (IOException e) {
-                Ui ui = new Ui();
-                ui.showFileCreationError();
+                this.ui.showFileCreationError();
             }
         }
     }

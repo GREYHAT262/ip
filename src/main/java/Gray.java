@@ -8,7 +8,7 @@ public class Gray {
 
     public Gray(String filePath) {
         this.ui = new Ui();
-        this.storage = new Storage(filePath);
+        this.storage = new Storage(ui, filePath);
         try {
             this.tasks = new TaskList(storage.load());
         } catch (FileNotFoundException e) {
@@ -25,9 +25,10 @@ public class Gray {
         while (!isExit) {
             try {
                 String input = ui.readCommand();
-                Parser.parse(this.tasks, input);
+                Command c = Parser.parse(input);
+                c.execute(tasks, ui, storage);
                 this.storage.save(this.tasks);
-                isExit = Parser.isExit;
+                isExit = c.isExit();
             } catch (IOException e) {
                 this.ui.showWriteFileError();
             }

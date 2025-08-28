@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Parser {
-    public enum Command {
+    public enum CommandType {
         LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
     }
 
@@ -41,14 +41,6 @@ public class Parser {
         }
     }
 
-    public static boolean isExit = false;
-
-    private static void add(TaskList taskList, Task task) {
-        taskList.add(task);
-        Ui ui = new Ui();
-        ui.showAddTask(task, taskList.size());
-    }
-
     private static String inBetween(String str1, String str2, String target) {
         String[] firstSplit = target.split(str1, 2);
         if (firstSplit.length == 2) {
@@ -79,62 +71,53 @@ public class Parser {
         }
     }
 
-    private static void list(TaskList taskList, String[] inputParts) {
+    private static ListCommand list(String[] inputParts) {
         Ui ui = new Ui();
-        if (inputParts.length != 1 && !(inputParts[1].trim().isEmpty())) {
-            ui.showInvalidInstruction();
-        } else {
-            ui.showTasks(taskList);
-        }
+        boolean isValid = inputParts.length == 1 || inputParts[1].trim().isEmpty();
+        return new ListCommand(isValid);
     }
 
-    private static void mark(TaskList taskList, String[] inputParts) {
-        Ui ui = new Ui();
+    private static MarkCommand mark(String[] inputParts) {
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            try {
-                int index = Integer.parseInt(inputParts[1]) - 1;
-                taskList.mark(index);
-                ui.showMarkTask(taskList.get(index));
-            } catch (IndexOutOfBoundsException e) {
-                ui.showTaskNotFound();
-            }
+            int index = Integer.parseInt(inputParts[1]) - 1;
+            return new MarkCommand(index);
         } else {
-            ui.showNoIndex();
+            return new MarkCommand();
         }
     }
 
-    private static void unmark(TaskList taskList, String[] inputParts) {
-        Ui ui = new Ui();
+    private static UnmarkCommand unmark(String[] inputParts) {
         if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            try {
-                int index = Integer.parseInt(inputParts[1]) - 1;
-                taskList.unmark(index);
-                ui.showUnmarkTask(taskList.get(index));
-            } catch (IndexOutOfBoundsException e) {
-                ui.showTaskNotFound();
-            }
+            int index = Integer.parseInt(inputParts[1]) - 1;
+            return new UnmarkCommand(index);
         } else {
-            ui.showNoIndex();
+            return new UnmarkCommand();
         }
     }
 
-    private static void createTodo(TaskList taskList, String[] inputParts) {
-        Ui ui = new Ui();
-        String description;
+    private static DeleteCommand delete(String[] inputParts) {
+        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
+            int index = Integer.parseInt(inputParts[1]) - 1;
+            return new DeleteCommand(index);
+        } else {
+            return new DeleteCommand();
+        }
+    }
+
+    private static AddCommand createTodo(String[] inputParts) {
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(Parser.TaskType.TODO, Parser.MissingInfo.DESCRIPTION);
             }
-            description = inputParts[1];
+            String description = inputParts[1].trim();
             Todo todo = new Todo(description);
-            Parser.add(taskList, todo);
+            return new AddCommand(todo);
         } catch (InvalidTaskException e) {
-            ui.showInvalidTaskException(e);
+            return new AddCommand(e);
         }
     }
 
-    private static void createDeadline(TaskList taskList, String[] inputParts) {
-        Ui ui = new Ui();
+    private static AddCommand createDeadline(String[] inputParts) {
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION_DUE);
@@ -149,20 +132,18 @@ public class Parser {
                 throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DUE);
             }
             String description = inputParts[0].trim();
-            LocalDateTime by;
-            try {
-                by = LocalDateTime.parse(inputParts[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                Deadline deadline = new Deadline(description, by);
-                Parser.add(taskList, deadline);
-            } catch (DateTimeParseException e) {
-                ui.showInvalidDateAndTime();
-            }
+            LocalDateTime by = LocalDateTime.parse(inputParts[1].trim(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            Deadline deadline = new Deadline(description, by);
+            return new AddCommand(deadline);
         } catch (InvalidTaskException e) {
-            ui.showInvalidTaskException(e);
+            return new AddCommand(e);
+        } catch (DateTimeParseException e) {
+            return new AddCommand();
         }
     }
 
-    private static void createEvent(TaskList taskList, String input) {
+    private static AddCommand createEvent(String input) {
         Ui ui = new Ui();
         try {
             String description = Parser.inBetween(" ", "/from", input);
@@ -181,74 +162,51 @@ public class Parser {
             if (description.contains("/to")) {
                 throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.WRONG_ORDER);
             }
-            LocalDateTime startDate;
-            LocalDateTime endDate;
-            try {
-                startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                Event event = new Event(description, startDate, endDate);
-                Parser.add(taskList, event);
-            } catch (DateTimeParseException e) {
-                ui.showInvalidDateAndTime();
-            }
+            LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            Event event = new Event(description, startDate, endDate);
+            return new AddCommand(event);
         } catch (InvalidTaskException e) {
-            ui.showInvalidTaskException(e);
+            return new AddCommand(e);
+        } catch (DateTimeParseException e) {
+            return new AddCommand();
         }
     }
 
-    private static void delete(TaskList taskList, String[] inputParts) {
-        Ui ui = new Ui();
-        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            try {
-                int index = Integer.parseInt(inputParts[1]) - 1;
-                ui.showDeleteTask(taskList.delete(index), taskList.size());
-            } catch (IndexOutOfBoundsException e) {
-                ui.showTaskNotFound();
-            }
-        } else {
-            ui.showNoIndex();
-        }
-    }
-
-    private static void getTasksOn(TaskList taskList, String[] inputParts) {
+    private static DateCommand getTasksOn(String[] inputParts) {
         Ui ui = new Ui();
         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-            ui.showNoDate();
-            return;
+            return new DateCommand(false);
         }
-        LocalDate date;
         try {
-            date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            ui.showTasksOnDate(taskList.filterByDate(date), date);
+            LocalDate date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return new DateCommand(date);
         } catch (DateTimeParseException e) {
-            ui.showInvalidDate();
+            return new DateCommand(true);
         }
     }
 
-    public static void parse(TaskList taskList, String input) {
-        Ui ui = new Ui();
-        if (input.equals("bye")) {
-            ui.showGoodbye();
-            Parser.isExit = true;
-            return;
+    public static Command parse(String input) {
+        if (input.trim().equals("bye")) {
+            return new ByeCommand();
         }
         String[] inputParts = input.split(" ", 2);
-        Parser.Command command;
+        Parser.CommandType command;
         try {
-            command = Parser.Command.valueOf(inputParts[0].toUpperCase());
+            command = Parser.CommandType.valueOf(inputParts[0].toUpperCase());
         } catch (IllegalArgumentException e) {
-            command = Parser.Command.INVALID;
+            command = Parser.CommandType.INVALID;
         }
-        switch (command) {
-            case LIST -> Parser.list(taskList, inputParts);
-            case MARK -> Parser.mark(taskList, inputParts);
-            case UNMARK -> Parser.unmark(taskList, inputParts);
-            case TODO -> Parser.createTodo(taskList, inputParts);
-            case DEADLINE -> Parser.createDeadline(taskList, inputParts);
-            case EVENT -> Parser.createEvent(taskList, input);
-            case DELETE -> Parser.delete(taskList, inputParts);
-            case DATE -> Parser.getTasksOn(taskList, inputParts);
-            default -> ui.showInvalidInstruction();
-        }
+        return switch (command) {
+            case LIST -> Parser.list(inputParts);
+            case MARK -> Parser.mark(inputParts);
+            case UNMARK -> Parser.unmark(inputParts);
+            case TODO -> Parser.createTodo(inputParts);
+            case DEADLINE -> Parser.createDeadline(inputParts);
+            case EVENT -> Parser.createEvent(input);
+            case DELETE -> Parser.delete(inputParts);
+            case DATE -> Parser.getTasksOn(inputParts);
+            default -> new InvalidCommand();
+        };
     }
 }
