@@ -1,3 +1,8 @@
+package gray.command;
+
+import gray.task.TaskList;
+import gray.ui.Storage;
+import gray.ui.Ui;
 import java.io.IOException;
 
 public abstract class Command {
