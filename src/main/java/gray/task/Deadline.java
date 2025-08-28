@@ -4,16 +4,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a deadline task which must be completed by a specified date.
+ */
 public class Deadline extends Task {
     private final LocalDateTime by;
 
+    /**
+     * Creates a new deadline with the specified description and due date and time.
+     * The task is initialised to not done.
+     */
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
     }
 
-    public boolean correctDateTime(LocalDate dateTime) {
-        return this.by.getDayOfMonth() == dateTime.getDayOfMonth();
+    /**
+     * Checks if deadline occurs on the specified date.
+     */
+    public boolean correctDate(LocalDate date) {
+        return this.by.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override

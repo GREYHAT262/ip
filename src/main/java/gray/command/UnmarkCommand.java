@@ -5,15 +5,26 @@ import gray.ui.Storage;
 import gray.ui.Ui;
 import java.io.IOException;
 
+/**
+ * Marks a task as not done.
+ */
 public class UnmarkCommand extends Command {
     private int index;
     private final boolean isValid;
 
+    /**
+     * Creates a new UnmarkCommand.
+     * If index is valid.
+     */
     public UnmarkCommand(int index) {
         this.index = index;
         this.isValid = true;
     }
 
+    /**
+     * Creates a new UnmarkCommand.
+     * If index is invalid.
+     */
     public UnmarkCommand() {
         this.isValid = false;
     }

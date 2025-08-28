@@ -3,50 +3,80 @@ package gray.task;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Represents a list of tasks.
+ */
 public class TaskList {
     ArrayList<Task> taskList;
 
+    /**
+     * Creates a new list containing all the tasks in taskList.
+     */
     public TaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
     }
 
+    /**
+     * Creates a new list with no tasks.
+     */
     public TaskList() {
         this.taskList = new ArrayList<>();
     }
 
+    /**
+     * Retrieves a task of a given index.
+     */
     public Task get(int index) {
         return this.taskList.get(index);
     }
 
+    /**
+     * Retrieves the number of tasks.
+     */
     public int size() {
         return this.taskList.size();
     }
 
+    /**
+     * Adds a task to taskList.
+     */
     public void add(Task task) {
         this.taskList.add(task);
     }
 
+    /**
+     * Removes a task of a given index from taskList.
+     */
     public Task delete(int index) {
         return this.taskList.remove(index);
     }
 
+    /**
+     * Mark a task of a given index as done.
+     */
     public void mark(int index) {
         this.taskList.get(index).markAsDone();
     }
 
+    /**
+     * Mark a task of a given index as not done.
+     */
     public void unmark(int index) {
         this.taskList.get(index).markAsNotDone();
     }
 
+    /**
+     * Returns TaskList object containing only tasks occurring on the specified date.
+     */
     public TaskList filterByDate(LocalDate date) {
         TaskList filtered = new TaskList();
         for (Task task : this.taskList) {
             if (task instanceof Deadline deadline) {
-                if (deadline.correctDateTime(date)) {
+                if (deadline.correctDate(date)) {
                     filtered.add(deadline);
                 }
             } else if (task instanceof Event event) {
-                if (event.correctDateTime(date)) {
+                if (event.correctDate(date)) {
                     filtered.add(event);
                 }
             }
@@ -54,6 +84,9 @@ public class TaskList {
         return filtered;
     }
 
+    /**
+     * Converts tasks to strings of the format required for storage in file.
+     */
     public String toStorage() {
         StringBuilder taskString = new StringBuilder();
         for (Task task : this.taskList) {

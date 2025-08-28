@@ -1,9 +1,16 @@
 package gray.task;
 
+/**
+ * Represents a generic task with a description and completion status.
+ */
 public class Task {
     protected String description;
     protected boolean isDone;
 
+    /**
+     * Creates a task with the specified description.
+     * The task is initialised to not done.
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -13,10 +20,16 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
+    /**
+     * Marks the task as done.
+     */
     public void markAsDone() {
         this.isDone = true;
     }
 
+    /**
+     * Marks the task as not done.
+     */
     public void markAsNotDone() {
         this.isDone = false;
     }
@@ -26,6 +39,9 @@ public class Task {
         return "[" + this.getStatusIcon() + "] " + this.description;
     }
 
+    /**
+     * Converts task to a string in the format used for storage.
+     */
     public String toStorage() {
         return " | " + (isDone ? "1" : "0") + " | " + this.description;
     }

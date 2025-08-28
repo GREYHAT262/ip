@@ -6,11 +6,19 @@ import gray.task.TaskList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Represents a chatbot which manages users' tasks.
+ */
 public class Gray {
     private final Ui ui;
     private final Storage storage;
     private TaskList tasks;
 
+    /**
+     * Creates the chatbot Gray.
+     *
+     * @param filePath Location of the file where tasks would be loaded from and saved to.
+     */
     public Gray(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(ui, filePath);
@@ -24,6 +32,9 @@ public class Gray {
         }
     }
 
+    /**
+     * Runs the chatbot Gray.
+     */
     public void run() {
         this.ui.showWelcome();
         boolean isExit = false;
@@ -40,6 +51,9 @@ public class Gray {
         }
     }
 
+    /**
+     * Acts as the starting point of the chatbot Gray.
+     */
     public static void main(String[] args) {
         new Gray("./data/gray.txt").run();
     }
