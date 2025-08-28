@@ -18,11 +18,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input into different command types.
+ */
 public class Parser {
+    /**
+     * Represents possible commands from a user.
+     */
     public enum CommandType {
         LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
     }
 
+    /**
+     * Represents 3 types of tasks: todo, deadline and event.
+     */
     public enum TaskType {
         TODO("todo"),
         DEADLINE("deadline"),
@@ -36,6 +45,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Represents possible combinations of missing arguments during task instantiation.
+     */
     public enum MissingInfo {
         DESCRIPTION("description"),
         DUE("due date/time"),
@@ -56,6 +68,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Returns string between two regex.
+     *
+     * @param str1 First regex.
+     * @param str2 Second regex.
+     * @param target String to be split.
+     */
     private static String inBetween(String str1, String str2, String target) {
         String[] firstSplit = target.split(str1, 2);
         if (firstSplit.length == 2) {
@@ -65,6 +84,14 @@ public class Parser {
         }
     }
 
+    /**
+     * Checks if all required arguments to create an Event object are present.
+     *
+     * @param description Description of event.
+     * @param start Start time of event.
+     * @param end End time of event.
+     * @throws InvalidTaskException If any one of description, start and end is empty.
+     */
     private static void checkEvent(String description, String start, String end) throws InvalidTaskException {
         boolean noDescription = description.isEmpty();
         boolean noStart = start.isEmpty();
@@ -201,6 +228,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Returns a Command object to be executed.
+     * The subtype of Command is determined by user input.
+     *
+     * @param input User input.
+     */
     public static Command parse(String input) {
         if (input.trim().equals("bye")) {
             return new ByeCommand();

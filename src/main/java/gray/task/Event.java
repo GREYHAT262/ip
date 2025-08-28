@@ -4,19 +4,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents an event task which occurs over a specific period of time.
+ */
 public class Event extends Task {
     private final LocalDateTime start;
     private final LocalDateTime end;
 
+    /**
+     * Creates a new event with the specified description, start and end date and time.
+     * The task is initialised to not done.
+     */
     public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
         this.start = start;
         this.end = end;
     }
 
-    public boolean correctDateTime(LocalDate dateTime) {
-        return this.start.getDayOfMonth() == dateTime.getDayOfMonth()
-                || this.end.getDayOfMonth() == dateTime.getDayOfMonth();
+    /**
+     * Checks if event occurs on the specified date.
+     */
+    public boolean correctDate(LocalDate date) {
+        return this.start.getDayOfMonth() == date.getDayOfMonth()
+                || this.end.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override

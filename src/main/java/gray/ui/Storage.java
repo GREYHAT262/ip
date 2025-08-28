@@ -16,10 +16,19 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Stores and loads tasks entered by user in previous sessions.
+ */
 public class Storage {
     File file;
     FileWriter fileWriter;
 
+    /**
+     * Creates a new storage.
+     *
+     * @param ui Ui used for printing chatbot responses.
+     * @param filePath Location of file used for storage.
+     */
     public Storage(Ui ui, String filePath) {
         int idx = filePath.lastIndexOf("/");
         String directoryPath = filePath.substring(0, idx);
@@ -37,6 +46,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Load tasks stored in file into chatbot.
+     *
+     * @return ArrayList of Task objects.
+     * @throws FileNotFoundException If file used for storage cannot be found.
+     * @throws CorruptedFileException If contents of file is not in the required format.
+     */
     public ArrayList<Task> load() throws FileNotFoundException, CorruptedFileException {
         Scanner scanner = new Scanner(this.file);
         ArrayList<Task> tasks = new ArrayList<>();
@@ -106,6 +122,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves tasks in taskList to the file.
+     *
+     * @throws IOException If FileWriter object fails to write to the file.
+     */
     public void save(TaskList taskList) throws IOException {
         this.fileWriter = new FileWriter(this.file);
         this.fileWriter.write(taskList.toStorage());
