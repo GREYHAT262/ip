@@ -1,18 +1,19 @@
 package gray.ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
 import gray.exception.CorruptedFileException;
 import gray.exception.InvalidTaskException;
 import gray.task.Task;
 import gray.task.TaskList;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 public class Ui {
     private final Scanner scanner;
 
     public Ui() {
-        this.scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
 
     private static void respond(String input) {
@@ -128,6 +129,6 @@ public class Ui {
     }
 
     public String readCommand() {
-        return this.scanner.nextLine();
+        return scanner.nextLine();
     }
 }

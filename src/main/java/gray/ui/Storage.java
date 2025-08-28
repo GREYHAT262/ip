@@ -1,11 +1,5 @@
 package gray.ui;
 
-import gray.exception.CorruptedFileException;
-import gray.task.Deadline;
-import gray.task.Event;
-import gray.task.Task;
-import gray.task.TaskList;
-import gray.task.Todo;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,9 +10,15 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import gray.exception.CorruptedFileException;
+import gray.task.Deadline;
+import gray.task.Event;
+import gray.task.Task;
+import gray.task.TaskList;
+import gray.task.Todo;
+
 public class Storage {
-    File file;
-    FileWriter fileWriter;
+    private final File file;
 
     public Storage(Ui ui, String filePath) {
         int idx = filePath.lastIndexOf("/");
@@ -27,10 +27,10 @@ public class Storage {
         if (!directory.exists()) {
             directory.mkdir();
         }
-        this.file = new File(filePath);
-        if (!this.file.exists()) {
+        file = new File(filePath);
+        if (!file.exists()) {
             try {
-                this.file.createNewFile();
+                file.createNewFile();
             } catch (IOException e) {
                 ui.showFileCreationError();
             }
@@ -38,7 +38,7 @@ public class Storage {
     }
 
     public ArrayList<Task> load() throws FileNotFoundException, CorruptedFileException {
-        Scanner scanner = new Scanner(this.file);
+        Scanner scanner = new Scanner(file);
         ArrayList<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String entry = scanner.nextLine();
@@ -107,8 +107,8 @@ public class Storage {
     }
 
     public void save(TaskList taskList) throws IOException {
-        this.fileWriter = new FileWriter(this.file);
-        this.fileWriter.write(taskList.toStorage());
-        this.fileWriter.close();
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write(taskList.toStorage());
+        fileWriter.close();
     }
 }

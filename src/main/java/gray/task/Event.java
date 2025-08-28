@@ -15,20 +15,19 @@ public class Event extends Task {
     }
 
     public boolean correctDateTime(LocalDate dateTime) {
-        return this.start.getDayOfMonth() == dateTime.getDayOfMonth()
-                || this.end.getDayOfMonth() == dateTime.getDayOfMonth();
+        return start.getDayOfMonth() == dateTime.getDayOfMonth() || end.getDayOfMonth() == dateTime.getDayOfMonth();
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " +
-                this.start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " to: "
-                + this.end.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
+        return "[E]" + super.toString() + " (from: "
+                + start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " to: "
+                + end.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
     }
 
     @Override
     public String toStorage() {
-        return "E" + super.toStorage() + " | " + this.start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
-                + " | " + this.end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return "E" + super.toStorage() + " | " + start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
+                + " | " + end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }

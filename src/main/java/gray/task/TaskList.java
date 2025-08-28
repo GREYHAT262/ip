@@ -4,43 +4,43 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TaskList {
-    ArrayList<Task> taskList;
+    private final ArrayList<Task> taskList;
 
     public TaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
     }
 
     public TaskList() {
-        this.taskList = new ArrayList<>();
+        taskList = new ArrayList<>();
     }
 
     public Task get(int index) {
-        return this.taskList.get(index);
+        return taskList.get(index);
     }
 
     public int size() {
-        return this.taskList.size();
+        return taskList.size();
     }
 
     public void add(Task task) {
-        this.taskList.add(task);
+        taskList.add(task);
     }
 
     public Task delete(int index) {
-        return this.taskList.remove(index);
+        return taskList.remove(index);
     }
 
     public void mark(int index) {
-        this.taskList.get(index).markAsDone();
+        taskList.get(index).markAsDone();
     }
 
     public void unmark(int index) {
-        this.taskList.get(index).markAsNotDone();
+        taskList.get(index).markAsNotDone();
     }
 
     public TaskList filterByDate(LocalDate date) {
         TaskList filtered = new TaskList();
-        for (Task task : this.taskList) {
+        for (Task task : taskList) {
             if (task instanceof Deadline deadline) {
                 if (deadline.correctDateTime(date)) {
                     filtered.add(deadline);
@@ -56,7 +56,7 @@ public class TaskList {
 
     public String toStorage() {
         StringBuilder taskString = new StringBuilder();
-        for (Task task : this.taskList) {
+        for (Task task : taskList) {
             taskString.append(task.toStorage()).append("\n");
         }
         return taskString.toString();
@@ -65,11 +65,11 @@ public class TaskList {
     @Override
     public String toString() {
         StringBuilder taskString = new StringBuilder();
-        for (int i = 0; i < this.taskList.size(); i++) {
+        for (int i = 0; i < taskList.size(); i++) {
             if (i != 0) {
                 taskString.append("\n");
             }
-            Task task = this.taskList.get(i);
+            Task task = taskList.get(i);
             taskString.append(i + 1).append(".").append(task);
         }
         return taskString.toString();

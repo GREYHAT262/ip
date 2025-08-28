@@ -14,19 +14,19 @@ public class Task {
     }
 
     public void markAsDone() {
-        this.isDone = true;
+        isDone = true;
     }
 
     public void markAsNotDone() {
-        this.isDone = false;
+        isDone = false;
     }
 
     @Override
     public String toString() {
-        return "[" + this.getStatusIcon() + "] " + this.description;
+        return "[" + this.getStatusIcon() + "] " + description;
     }
 
     public String toStorage() {
-        return " | " + (isDone ? "1" : "0") + " | " + this.description;
+        return " | " + (isDone ? "1" : "0") + " | " + description;
     }
 }

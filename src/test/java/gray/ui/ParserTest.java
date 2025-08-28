@@ -1,5 +1,9 @@
 package gray.ui;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
+import org.junit.jupiter.api.Test;
+
 import gray.command.AddCommand;
 import gray.command.ByeCommand;
 import gray.command.DateCommand;
@@ -8,9 +12,6 @@ import gray.command.InvalidCommand;
 import gray.command.ListCommand;
 import gray.command.MarkCommand;
 import gray.command.UnmarkCommand;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class ParserTest {
     @Test
