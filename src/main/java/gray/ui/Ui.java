@@ -107,6 +107,14 @@ public class Ui {
         }
     }
 
+    public void showFindTasks(TaskList taskList) {
+        if (taskList.size() == 0) {
+            Ui.respond("No matching tasks can be found!");
+        } else {
+            Ui.respond("Here are the matching tasks in your list:\n" + taskList);
+        }
+    }
+
     public void showFileCreationError() {
         Ui.respond("Sorry! I'm not able to create the file to store your tasks!");
     }

@@ -54,6 +54,16 @@ public class TaskList {
         return filtered;
     }
 
+    public TaskList filterByDescription(String description) {
+        TaskList filtered = new TaskList();
+        for (Task task : taskList) {
+            if (task.matchDescription(description)) {
+                filtered.add(task);
+            }
+        }
+        return filtered;
+    }
+
     public String toStorage() {
         StringBuilder taskString = new StringBuilder();
         for (Task task : this.taskList) {

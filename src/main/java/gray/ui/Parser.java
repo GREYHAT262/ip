@@ -6,6 +6,7 @@ import gray.command.ByeCommand;
 import gray.command.Command;
 import gray.command.DateCommand;
 import gray.command.DeleteCommand;
+import gray.command.FindCommand;
 import gray.command.InvalidCommand;
 import gray.command.ListCommand;
 import gray.command.MarkCommand;
@@ -20,7 +21,7 @@ import java.time.format.DateTimeParseException;
 
 public class Parser {
     public enum CommandType {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, FIND, INVALID;
     }
 
     public enum TaskType {
@@ -201,6 +202,13 @@ public class Parser {
         }
     }
 
+    private static Command find(String[] inputParts) {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            return new InvalidCommand();
+        }
+        return new FindCommand(inputParts[1].trim());
+    }
+
     public static Command parse(String input) {
         if (input.trim().equals("bye")) {
             return new ByeCommand();
@@ -221,6 +229,7 @@ public class Parser {
             case EVENT -> Parser.createEvent(input);
             case DELETE -> Parser.delete(inputParts);
             case DATE -> Parser.getTasksOn(inputParts);
+            case FIND -> Parser.find(inputParts);
             default -> new InvalidCommand();
         };
     }
