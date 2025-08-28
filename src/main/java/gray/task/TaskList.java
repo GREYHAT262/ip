@@ -66,7 +66,7 @@ public class TaskList {
     }
 
     /**
-     * Returns TaskList object containing only tasks occurring on the specified date.
+     * Returns task list containing only tasks occurring on the specified date.
      */
     public TaskList filterByDate(LocalDate date) {
         TaskList filtered = new TaskList();
@@ -79,6 +79,19 @@ public class TaskList {
                 if (event.correctDate(date)) {
                     filtered.add(event);
                 }
+            }
+        }
+        return filtered;
+    }
+
+    /**
+     * Returns task list containing only tasks with matching descriptions.
+     */
+    public TaskList filterByDescription(String description) {
+        TaskList filtered = new TaskList();
+        for (Task task : taskList) {
+            if (task.matchDescription(description)) {
+                filtered.add(task);
             }
         }
         return filtered;

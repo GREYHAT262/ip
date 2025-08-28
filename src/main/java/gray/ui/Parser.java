@@ -10,6 +10,7 @@ import gray.command.ByeCommand;
 import gray.command.Command;
 import gray.command.DateCommand;
 import gray.command.DeleteCommand;
+import gray.command.FindCommand;
 import gray.command.InvalidCommand;
 import gray.command.ListCommand;
 import gray.command.MarkCommand;
@@ -27,7 +28,7 @@ public class Parser {
      * Represents possible commands from a user.
      */
     public enum CommandType {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, INVALID;
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, FIND, INVALID;
     }
 
     /**
@@ -229,6 +230,13 @@ public class Parser {
         }
     }
 
+    private static Command find(String[] inputParts) {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            return new InvalidCommand();
+        }
+        return new FindCommand(inputParts[1].trim());
+    }
+
     /**
      * Returns a Command object to be executed.
      * The subtype of Command is determined by user input.
@@ -255,6 +263,7 @@ public class Parser {
             case EVENT -> Parser.createEvent(input);
             case DELETE -> Parser.delete(inputParts);
             case DATE -> Parser.getTasksOn(inputParts);
+            case FIND -> Parser.find(inputParts);
             default -> new InvalidCommand();
         };
     }

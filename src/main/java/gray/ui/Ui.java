@@ -163,6 +163,17 @@ public class Ui {
     }
 
     /**
+     * Prints tasks with matching descriptions.
+     */
+    public void showFindTasks(TaskList taskList) {
+        if (taskList.size() == 0) {
+            Ui.respond("No matching tasks can be found!");
+        } else {
+            Ui.respond("Here are the matching tasks in your list:\n" + taskList);
+        }
+    }
+
+    /**
      * Prints file creation error message.
      */
     public void showFileCreationError() {
