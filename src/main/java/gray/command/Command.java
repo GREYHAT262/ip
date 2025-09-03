@@ -13,6 +13,9 @@ public abstract class Command {
     /**
      * Performs the function of the command.
      *
+     * @param taskList List of tasks.
+     * @param ui Ui which displays user input and chatbot response.
+     * @param storage Storage where tasks are loaded from and saved to.
      * @throws IOException If Storage object fails to save taskList.
      */
     public abstract void execute(TaskList taskList, Ui ui, Storage storage) throws IOException;

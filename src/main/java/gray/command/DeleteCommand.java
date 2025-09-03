@@ -16,6 +16,8 @@ public class DeleteCommand extends Command {
     /**
      * Creates a new DeleteCommand.
      * If index is valid.
+     *
+     * @param index Index of the task to be deleted.
      */
     public DeleteCommand(int index) {
         this.index = index;

@@ -67,6 +67,7 @@ public class Storage {
             if (!(mark.equals("0") || mark.equals("1"))) {
                 throw new CorruptedFileException();
             }
+            //CHECKSTYLE.OFF: Indentation
             switch (type) {
                 case "T" -> {
                     if (parts.length != 3) {
@@ -118,6 +119,7 @@ public class Storage {
                 }
                 default -> throw new CorruptedFileException();
             }
+            //CHECKSTYLE.ON: Indentation
         }
         return tasks;
     }
@@ -125,6 +127,7 @@ public class Storage {
     /**
      * Saves tasks in taskList to the file.
      *
+     * @param taskList A list of tasks the user wants to save.
      * @throws IOException If FileWriter object fails to write to the file.
      */
     public void save(TaskList taskList) throws IOException {

@@ -14,6 +14,10 @@ public class Event extends Task {
     /**
      * Creates a new event with the specified description, start and end date and time.
      * The task is initialised to not done.
+     *
+     * @param description Description of event.
+     * @param start Start date and time of event.
+     * @param end End date and time of event.
      */
     public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
@@ -23,8 +27,10 @@ public class Event extends Task {
 
     /**
      * Checks if event occurs on the specified date.
+     *
+     * @param date Date to compare against.
      */
-    public boolean correctDate(LocalDate date) {
+    public boolean isCorrectDate(LocalDate date) {
         return start.getDayOfMonth() == date.getDayOfMonth()
                 || end.getDayOfMonth() == date.getDayOfMonth();
     }

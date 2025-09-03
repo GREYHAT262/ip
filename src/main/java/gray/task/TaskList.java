@@ -11,6 +11,8 @@ public class TaskList {
 
     /**
      * Creates a new list containing all the tasks in taskList.
+     *
+     * @param taskList A list of tasks.
      */
     public TaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
@@ -72,11 +74,11 @@ public class TaskList {
         TaskList filtered = new TaskList();
         for (Task task : taskList) {
             if (task instanceof Deadline deadline) {
-                if (deadline.correctDate(date)) {
+                if (deadline.isCorrectDate(date)) {
                     filtered.add(deadline);
                 }
             } else if (task instanceof Event event) {
-                if (event.correctDate(date)) {
+                if (event.isCorrectDate(date)) {
                     filtered.add(event);
                 }
             }

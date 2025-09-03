@@ -20,6 +20,8 @@ public class AddCommand extends Command {
     /**
      * Creates a new AddCommand.
      * If task can be instantiated.
+     *
+     * @param task Task to be added.
      */
     public AddCommand(Task task) {
         this.task = task;
@@ -30,6 +32,8 @@ public class AddCommand extends Command {
     /**
      * Creates a new AddCommand.
      * If there are missing arguments leading to an invalid task.
+     *
+     * @param e InvalidTaskException thrown. Taken in as an argument so it can print the error message.
      */
     public AddCommand(InvalidTaskException e) {
         isValid = false;
