@@ -8,32 +8,37 @@ import java.time.format.DateTimeFormatter;
  * Represents a deadline task which must be completed by a specified date.
  */
 public class Deadline extends Task {
-    private final LocalDateTime by;
+    private final LocalDateTime byDate;
 
     /**
      * Creates a new deadline with the specified description and due date and time.
      * The task is initialised to not done.
+     *
+     * @param description Description of the deadline.
+     * @param byDate Due date of the deadline.
      */
-    public Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime byDate) {
         super(description);
-        this.by = by;
+        this.byDate = byDate;
     }
 
     /**
      * Checks if deadline occurs on the specified date.
+     *
+     * @param date Date to be compared to.
      */
-    public boolean correctDate(LocalDate date) {
-        return by.getDayOfMonth() == date.getDayOfMonth();
+    public boolean isCorrectDate(LocalDate date) {
+        return byDate.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: "
-                + by.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
+                + byDate.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + ")";
     }
 
     @Override
     public String toStorage() {
-        return "D" + super.toStorage() + " | " + by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return "D" + super.toStorage() + " | " + byDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }

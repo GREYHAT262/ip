@@ -77,7 +77,7 @@ public class Parser {
      * @param str2 Second regex.
      * @param target String to be split.
      */
-    private static String inBetween(String str1, String str2, String target) {
+    private static String getStringBetweenRegexes(String str1, String str2, String target) {
         String[] firstSplit = target.split(str1, 2);
         if (firstSplit.length == 2) {
             return firstSplit[1].split(str2, 2)[0].trim();
@@ -191,11 +191,11 @@ public class Parser {
 
     private static AddCommand createEvent(String input) {
         try {
-            String description = Parser.inBetween(" ", "/from", input);
+            String description = Parser.getStringBetweenRegexes(" ", "/from", input);
             if (description.startsWith("/to")) {
                 description = "";
             }
-            String start = Parser.inBetween("/from", "/to", input);
+            String start = Parser.getStringBetweenRegexes("/from", "/to", input);
             String[] temp = input.split("/to", 2);
             String end;
             if (temp.length == 2) {
@@ -254,6 +254,7 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             command = Parser.CommandType.INVALID;
         }
+        //CHECKSTYLE.OFF: Indentation
         return switch (command) {
             case LIST -> Parser.list(inputParts);
             case MARK -> Parser.mark(inputParts);
@@ -266,5 +267,6 @@ public class Parser {
             case FIND -> Parser.find(inputParts);
             default -> new InvalidCommand();
         };
+        //CHECKSTYLE.ON: Indentation
     }
 }

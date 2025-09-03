@@ -7,6 +7,8 @@ public class Todo extends Task {
     /**
      * Creates a new todo with the specified description.
      * The task is initialised to not done.
+     *
+     * @param description Description of todo.
      */
     public Todo(String description) {
         super(description);
