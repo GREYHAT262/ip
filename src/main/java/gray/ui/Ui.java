@@ -33,179 +33,170 @@ public class Ui {
     }
 
     /**
-     * Prints welcome message.
+     * Returns goodbye message.
      */
-    public void showWelcome() {
-        Ui.respond("""
-                Hi! I'm Gray, your personal assistant chatbot!
-                What can I do for you?""");
+    public String showGoodbye() {
+        return "Bye and see you soon!";
     }
 
     /**
-     * Prints goodbye message.
+     * Returns invalid instruction error message.
      */
-    public void showGoodbye() {
-        Ui.respond("Bye and see you soon!");
-    }
-
-    /**
-     * Prints invalid instruction error message.
-     */
-    public void showInvalidInstruction() {
-        Ui.respond("""
+    public String showInvalidInstruction() {
+        return """
                 I don't understand what you mean.
-                Please enter a valid instruction.""");
+                Please enter a valid instruction.""";
     }
 
     /**
-     * Prints the task that was added and the number of tasks left.
+     * Returns the task that was added and the number of tasks left.
      */
-    public void showAddTask(Task task, int noOfTasks) {
+    public String showAddTask(Task task, int noOfTasks) {
         if (noOfTasks == 1) {
-            Ui.respond("I've added this task:\n  " + task + "\n"
-                    + "You have 1 task in your list. All the best!");
+            return "I've added this task:\n  " + task + "\n"
+                    + "You have 1 task in your list. All the best!";
         } else {
-            Ui.respond("I've added this task:\n  " + task + "\n" + "You have "
-                    + noOfTasks + " tasks in your list. All the best!");
+            return "I've added this task:\n  " + task + "\n" + "You have "
+                    + noOfTasks + " tasks in your list. All the best!";
         }
     }
 
     /**
-     * Prints the task that was deleted and the number of tasks left.
+     * Returns the task that was deleted and the number of tasks left.
      */
-    public void showDeleteTask(Task task, int noOfTasks) {
+    public String showDeleteTask(Task task, int noOfTasks) {
         if (noOfTasks == 0) {
-            Ui.respond("I've deleted this task:\n  " + task + "\n"
-                    + "You have no more tasks left!");
+            return "I've deleted this task:\n  " + task + "\n"
+                    + "You have no more tasks left!";
         } else if (noOfTasks == 1) {
-            Ui.respond("I've deleted this task:\n  " + task + "\n"
-                    + "You have 1 task in your list. All the best!");
+            return "I've deleted this task:\n  " + task + "\n"
+                    + "You have 1 task in your list. All the best!";
         } else {
-            Ui.respond("I've deleted this task:\n  " + task + "\n" + "You have "
-                    + noOfTasks + " tasks in your list. All the best!");
+            return "I've deleted this task:\n  " + task + "\n" + "You have "
+                    + noOfTasks + " tasks in your list. All the best!";
         }
     }
 
     /**
-     * Prints all tasks in taskList.
-     * Prints a separate message if there are no tasks left.
+     * Returns all tasks in taskList.
+     * Returns a separate message if there are no tasks left.
      */
-    public void showTasks(TaskList taskList) {
+    public String showTasks(TaskList taskList) {
         if (taskList.size() == 0) {
-            Ui.respond("Nice! You don't have any tasks left!");
+            return "Nice! You don't have any tasks left!";
         } else {
-            Ui.respond("Here are your tasks:\n" + taskList);
+            return "Here are your tasks:\n" + taskList;
         }
     }
 
     /**
-     * Prints the task that was marked.
+     * Returns the task that was marked.
      */
-    public void showMarkTask(Task task) {
-        Ui.respond("I have marked this task as done:\n  " + task);
+    public String showMarkTask(Task task) {
+        return "I have marked this task as done:\n  " + task;
     }
 
     /**
-     * Prints the task that was marked.
+     * Returns the task that was marked.
      */
-    public void showUnmarkTask(Task task) {
-        Ui.respond("I have marked this task as not done:\n  " + task);
+    public String showUnmarkTask(Task task) {
+        return "I have marked this task as not done:\n  " + task;
     }
 
     /**
-     * Prints task not found error message.
+     * Returns task not found error message.
      */
-    public void showTaskNotFound() {
-        Ui.respond("This task cannot be found!");
+    public String showTaskNotFound() {
+        return "This task cannot be found!";
     }
 
     /**
-     * Prints no task index error message.
+     * Returns no task index error message.
      */
-    public void showNoIndex() {
-        Ui.respond("Please give the index of the task.");
+    public String showNoIndex() {
+        return "Please give the index of the task.";
     }
 
     /**
-     * Prints invalid date and time error message.
+     * Returns invalid date and time error message.
      */
-    public void showInvalidDateAndTime() {
-        Ui.respond("""
+    public String showInvalidDateAndTime() {
+        return """
                 Invalid date and time!
-                Please use the format yyyy-MM-dd HHmm.""");
+                Please use the format yyyy-MM-dd HHmm.""";
     }
 
     /**
-     * Prints invalid date error message.
+     * Returns invalid date error message.
      */
-    public void showInvalidDate() {
-        Ui.respond("Invalid date! Please use the format yyyy-MM-dd.");
+    public String showInvalidDate() {
+        return "Invalid date! Please use the format yyyy-MM-dd.";
     }
 
     /**
-     * Prints no date error message.
+     * Returns no date error message.
      */
-    public void showNoDate() {
-        Ui.respond("Please give a date.");
+    public String showNoDate() {
+        return "Please give a date.";
     }
 
     /**
-     * Prints tasks occurring on a specified date.
+     * Returns tasks occurring on a specified date.
      */
-    public void showTasksOnDate(TaskList taskList, LocalDate date) {
+    public String showTasksOnDate(TaskList taskList, LocalDate date) {
         if (taskList.size() == 0) {
-            Ui.respond("There are no tasks on this date.");
+            return "There are no tasks on this date.";
         } else {
             String taskString = "Here are the tasks found on "
                     + date.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":\n" + taskList;
-            Ui.respond(taskString);
+            return taskString;
         }
     }
 
     /**
-     * Prints tasks with matching descriptions.
+     * Returns tasks with matching descriptions.
      */
-    public void showFindTasks(TaskList taskList) {
+    public String showFindTasks(TaskList taskList) {
         if (taskList.size() == 0) {
-            Ui.respond("No matching tasks can be found!");
+            return "No matching tasks can be found!";
         } else {
-            Ui.respond("Here are the matching tasks in your list:\n" + taskList);
+            return "Here are the matching tasks in your list:\n" + taskList;
         }
     }
 
     /**
-     * Prints file creation error message.
+     * Returns file creation error message.
      */
-    public void showFileCreationError() {
-        Ui.respond("Sorry! I'm not able to create the file to store your tasks!");
+    public String showFileCreationError() {
+        return "Sorry! I'm not able to create the file to store your tasks!";
     }
 
     /**
-     * Prints no file error message.
+     * Returns no file error message.
      */
-    public void showNoFile() {
-        Ui.respond("This file is not present.");
+    public String showNoFile() {
+        return "This file is not present.";
     }
 
     /**
-     * Prints write file error message.
+     * Returns write file error message.
      */
-    public void showWriteFileError() {
-        Ui.respond("Sorry! I couldn't write to your tasks file!");
+    public String showWriteFileError() {
+        return "Sorry! I couldn't write to your tasks file!";
     }
 
     /**
-     * Prints loading error message.
+     * Returns loading error message.
      */
-    public void showLoadingError(CorruptedFileException e) {
-        Ui.respond(e.getMessage());
+    public String showLoadingError(CorruptedFileException e) {
+        return e.getMessage();
     }
 
     /**
-     * Prints invalid task error message.
+     * Returns invalid task error message.
      */
-    public void showInvalidTaskException(InvalidTaskException e) {
-        Ui.respond(e.getMessage());
+    public String showInvalidTaskException(InvalidTaskException e) {
+        return e.getMessage();
     }
 
     /**

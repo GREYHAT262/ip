@@ -9,7 +9,7 @@ import gray.ui.Ui;
  */
 public class InvalidCommand extends Command {
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) {
-        ui.showInvalidInstruction();
+    public String execute(TaskList taskList, Ui ui, Storage storage) {
+        return ui.showInvalidInstruction();
     }
 }

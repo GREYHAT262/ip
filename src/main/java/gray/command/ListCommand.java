@@ -9,7 +9,7 @@ import gray.ui.Ui;
  */
 public class ListCommand extends Command {
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) {
-        ui.showTasks(taskList);
+    public String execute(TaskList taskList, Ui ui, Storage storage) {
+        return ui.showTasks(taskList);
     }
 }

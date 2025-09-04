@@ -19,7 +19,7 @@ public class FindCommand extends Command {
         this.description = description;
     }
 
-    public void execute(TaskList taskList, Ui ui, Storage storage) {
-        ui.showFindTasks(taskList.filterByDescription(description));
+    public String execute(TaskList taskList, Ui ui, Storage storage) {
+        return ui.showFindTasks(taskList.filterByDescription(description));
     }
 }

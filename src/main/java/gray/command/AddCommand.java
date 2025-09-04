@@ -51,17 +51,16 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
         if (!isValid) {
             if (!isValidDateTime) {
-                ui.showInvalidDateAndTime();
+                return ui.showInvalidDateAndTime();
             } else {
-                ui.showInvalidTaskException(e);
+                return ui.showInvalidTaskException(e);
             }
-            return;
         }
         taskList.add(task);
         storage.save(taskList);
-        ui.showAddTask(task, taskList.size());
+        return ui.showAddTask(task, taskList.size());
     }
 }

@@ -11,8 +11,8 @@ import gray.task.TaskList;
  * Represents a chatbot which manages users' tasks.
  */
 public class Gray {
-    private final Ui ui;
-    private final Storage storage;
+    private Ui ui;
+    private Storage storage;
     private TaskList tasks;
 
     /**
@@ -34,28 +34,18 @@ public class Gray {
     }
 
     /**
-     * Runs the chatbot Gray.
+     * Provides a response based on user input.
+     * @param input User input.
+     * @return Chatbot response.
      */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String input = ui.readCommand();
-                Command c = Parser.parse(input);
-                c.execute(tasks, ui, storage);
-                storage.save(tasks);
-                isExit = c.isExit();
-            } catch (IOException e) {
-                ui.showWriteFileError();
-            }
+    public String getResponse(String input) {
+        try {
+            Command c = Parser.parse(input);
+            String output = c.execute(tasks, ui, storage);
+            storage.save(tasks);
+            return output;
+        } catch (IOException e) {
+            return ui.showWriteFileError();
         }
-    }
-
-    /**
-     * Acts as the starting point of the chatbot Gray.
-     */
-    public static void main(String[] args) {
-        new Gray("./data/gray.txt").run();
     }
 }

@@ -33,17 +33,17 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
         if (!isValid) {
-            ui.showNoIndex();
-            return;
+            return ui.showNoIndex();
         }
         try {
             taskList.unmark(index);
-            ui.showUnmarkTask(taskList.get(index));
+            String output = ui.showUnmarkTask(taskList.get(index));
             storage.save(taskList);
+            return output;
         } catch (IndexOutOfBoundsException e) {
-            ui.showTaskNotFound();
+            return ui.showTaskNotFound();
         }
     }
 }
