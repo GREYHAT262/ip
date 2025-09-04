@@ -33,23 +33,14 @@ public class Ui {
     }
 
     /**
-     * Prints welcome message.
-     */
-    public String showWelcome() {
-        return """
-                Hi! I'm Gray, your personal assistant chatbot!
-                What can I do for you?""";
-    }
-
-    /**
-     * Prints goodbye message.
+     * Returns goodbye message.
      */
     public String showGoodbye() {
         return "Bye and see you soon!";
     }
 
     /**
-     * Prints invalid instruction error message.
+     * Returns invalid instruction error message.
      */
     public String showInvalidInstruction() {
         return """
@@ -58,7 +49,7 @@ public class Ui {
     }
 
     /**
-     * Prints the task that was added and the number of tasks left.
+     * Returns the task that was added and the number of tasks left.
      */
     public String showAddTask(Task task, int noOfTasks) {
         if (noOfTasks == 1) {
@@ -71,7 +62,7 @@ public class Ui {
     }
 
     /**
-     * Prints the task that was deleted and the number of tasks left.
+     * Returns the task that was deleted and the number of tasks left.
      */
     public String showDeleteTask(Task task, int noOfTasks) {
         if (noOfTasks == 0) {
@@ -87,8 +78,8 @@ public class Ui {
     }
 
     /**
-     * Prints all tasks in taskList.
-     * Prints a separate message if there are no tasks left.
+     * Returns all tasks in taskList.
+     * Returns a separate message if there are no tasks left.
      */
     public String showTasks(TaskList taskList) {
         if (taskList.size() == 0) {
@@ -99,35 +90,35 @@ public class Ui {
     }
 
     /**
-     * Prints the task that was marked.
+     * Returns the task that was marked.
      */
     public String showMarkTask(Task task) {
         return "I have marked this task as done:\n  " + task;
     }
 
     /**
-     * Prints the task that was marked.
+     * Returns the task that was marked.
      */
     public String showUnmarkTask(Task task) {
         return "I have marked this task as not done:\n  " + task;
     }
 
     /**
-     * Prints task not found error message.
+     * Returns task not found error message.
      */
     public String showTaskNotFound() {
         return "This task cannot be found!";
     }
 
     /**
-     * Prints no task index error message.
+     * Returns no task index error message.
      */
     public String showNoIndex() {
         return "Please give the index of the task.";
     }
 
     /**
-     * Prints invalid date and time error message.
+     * Returns invalid date and time error message.
      */
     public String showInvalidDateAndTime() {
         return """
@@ -136,21 +127,21 @@ public class Ui {
     }
 
     /**
-     * Prints invalid date error message.
+     * Returns invalid date error message.
      */
     public String showInvalidDate() {
         return "Invalid date! Please use the format yyyy-MM-dd.";
     }
 
     /**
-     * Prints no date error message.
+     * Returns no date error message.
      */
     public String showNoDate() {
         return "Please give a date.";
     }
 
     /**
-     * Prints tasks occurring on a specified date.
+     * Returns tasks occurring on a specified date.
      */
     public String showTasksOnDate(TaskList taskList, LocalDate date) {
         if (taskList.size() == 0) {
@@ -163,7 +154,7 @@ public class Ui {
     }
 
     /**
-     * Prints tasks with matching descriptions.
+     * Returns tasks with matching descriptions.
      */
     public String showFindTasks(TaskList taskList) {
         if (taskList.size() == 0) {
@@ -174,35 +165,35 @@ public class Ui {
     }
 
     /**
-     * Prints file creation error message.
+     * Returns file creation error message.
      */
     public String showFileCreationError() {
         return "Sorry! I'm not able to create the file to store your tasks!";
     }
 
     /**
-     * Prints no file error message.
+     * Returns no file error message.
      */
     public String showNoFile() {
         return "This file is not present.";
     }
 
     /**
-     * Prints write file error message.
+     * Returns write file error message.
      */
     public String showWriteFileError() {
         return "Sorry! I couldn't write to your tasks file!";
     }
 
     /**
-     * Prints loading error message.
+     * Returns loading error message.
      */
     public String showLoadingError(CorruptedFileException e) {
         return e.getMessage();
     }
 
     /**
-     * Prints invalid task error message.
+     * Returns invalid task error message.
      */
     public String showInvalidTaskException(InvalidTaskException e) {
         return e.getMessage();

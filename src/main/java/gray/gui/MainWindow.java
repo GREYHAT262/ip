@@ -28,9 +28,13 @@ public class MainWindow extends AnchorPane {
 
     private Gray gray;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/Econs.png"));
-    private Image grayImage = new Image(this.getClass().getResourceAsStream("/images/CS.png"));
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
+    private Image grayImage = new Image(this.getClass().getResourceAsStream("/images/gray.png"));
 
+    /**
+     * Initialises the GUI.
+     * Shows a welcome message from the chatbot.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());

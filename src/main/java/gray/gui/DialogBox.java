@@ -46,12 +46,25 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
     }
 
+    /**
+     * Produce user dialog box.
+     * @param text User input.
+     * @param img User image icon.
+     * @return DialogBox containing user image icon and user input.
+     */
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
 
+    /**
+     * Produce chatbot dialog box.
+     * @param text Chatbot response.
+     * @param img Chatbot image icon.
+     * @return DialogBox containing chatbot image icon and chatbot response.
+     */
     public static DialogBox getGrayDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();

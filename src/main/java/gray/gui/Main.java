@@ -17,6 +17,10 @@ public class Main extends Application {
 
     private final Gray gray = new Gray("./data/gray.txt");
 
+    /**
+     * Starts the GUI.
+     * @param stage Desktop window.
+     */
     @Override
     public void start(Stage stage) {
         try {
