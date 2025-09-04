@@ -2,6 +2,7 @@ package gray.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents a list of tasks.
@@ -16,6 +17,17 @@ public class TaskList {
      */
     public TaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
+    }
+
+
+    /**
+     * Creates a new list using a variable number of tasks.
+     *
+     * @param tasks A variable number of tasks.
+     */
+    public TaskList(Task... tasks) {
+        taskList = new ArrayList<>();
+        taskList.addAll(Arrays.asList(tasks));
     }
 
     /**
