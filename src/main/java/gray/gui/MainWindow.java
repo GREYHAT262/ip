@@ -1,5 +1,7 @@
 package gray.gui;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -7,8 +9,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import gray.ui.Gray;
+
 /**
  * Controller for the main GUI.
  */
@@ -25,11 +29,12 @@ public class MainWindow extends AnchorPane {
     private Gray gray;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/Econs.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/CS.png"));
+    private Image grayImage = new Image(this.getClass().getResourceAsStream("/images/CS.png"));
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        showWelcome();
     }
 
     /** Injects the Gray instance */
@@ -39,7 +44,11 @@ public class MainWindow extends AnchorPane {
 
     @FXML
     private void showWelcome() {
-
+        dialogContainer.getChildren().addAll(
+                DialogBox.getGrayDialog("""
+                Hi! I'm Gray, your personal assistant chatbot!
+                What can I do for you?""", grayImage)
+        );
     }
 
     /**
@@ -52,8 +61,13 @@ public class MainWindow extends AnchorPane {
         String response = gray.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getGrayDialog(response, grayImage)
         );
         userInput.clear();
+        if (input.equals("bye")) {
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(event -> Platform.exit());
+            pause.play();
+        }
     }
 }
