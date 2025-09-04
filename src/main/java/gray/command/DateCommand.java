@@ -38,14 +38,12 @@ public class DateCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) {
+    public String execute(TaskList taskList, Ui ui, Storage storage) {
         if (!hasDate) {
-            ui.showNoDate();
-            return;
+            return ui.showNoDate();
         } else if (!isValid) {
-            ui.showInvalidDate();
-            return;
+            return ui.showInvalidDate();
         }
-        ui.showTasksOnDate(taskList.filterByDate(date), date);
+        return ui.showTasksOnDate(taskList.filterByDate(date), date);
     }
 }

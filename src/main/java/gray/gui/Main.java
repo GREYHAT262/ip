@@ -15,7 +15,7 @@ import gray.ui.Gray;
  */
 public class Main extends Application {
 
-    private final Gray gray = new Gray();
+    private final Gray gray = new Gray("./data/gray.txt");
 
     @Override
     public void start(Stage stage) {

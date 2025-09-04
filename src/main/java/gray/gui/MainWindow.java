@@ -37,6 +37,11 @@ public class MainWindow extends AnchorPane {
         this.gray = gray;
     }
 
+    @FXML
+    private void showWelcome() {
+
+    }
+
     /**
      * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
      * the dialog container. Clears the user input after processing.

@@ -18,7 +18,7 @@ public abstract class Command {
      * @param storage Storage where tasks are loaded from and saved to.
      * @throws IOException If Storage object fails to save taskList.
      */
-    public abstract void execute(TaskList taskList, Ui ui, Storage storage) throws IOException;
+    public abstract String execute(TaskList taskList, Ui ui, Storage storage) throws IOException;
 
     /**
      * Returns whether chatbot should exit.

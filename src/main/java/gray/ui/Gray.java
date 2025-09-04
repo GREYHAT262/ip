@@ -33,10 +33,6 @@ public class Gray {
         }
     }
 
-    public Gray() {
-
-    }
-
     /**
      * Runs the chatbot Gray.
      */
@@ -64,6 +60,13 @@ public class Gray {
     }
 
     public String getResponse(String input) {
-        return "Duke heard: " + input;
+        try {
+            Command c = Parser.parse(input);
+            String output = c.execute(tasks, ui, storage);
+            storage.save(tasks);
+            return output;
+        } catch (IOException e) {
+            return ui.showWriteFileError();
+        }
     }
 }

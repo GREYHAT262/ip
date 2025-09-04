@@ -33,16 +33,16 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
         if (!isValid) {
-            ui.showNoIndex();
-            return;
+            return ui.showNoIndex();
         }
         try {
-            ui.showDeleteTask(taskList.delete(index), taskList.size());
+            String output = ui.showDeleteTask(taskList.delete(index), taskList.size());
             storage.save(taskList);
+            return output;
         } catch (IndexOutOfBoundsException e) {
-            ui.showTaskNotFound();
+            return ui.showTaskNotFound();
         }
     }
 }
