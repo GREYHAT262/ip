@@ -11,8 +11,8 @@ import gray.task.TaskList;
  * Represents a chatbot which manages users' tasks.
  */
 public class Gray {
-    private final Ui ui;
-    private final Storage storage;
+    private Ui ui;
+    private Storage storage;
     private TaskList tasks;
 
     /**
@@ -31,6 +31,10 @@ public class Gray {
             ui.showLoadingError(e);
             tasks = new TaskList();
         }
+    }
+
+    public Gray() {
+
     }
 
     /**
@@ -57,5 +61,9 @@ public class Gray {
      */
     public static void main(String[] args) {
         new Gray("./data/gray.txt").run();
+    }
+
+    public String getResponse(String input) {
+        return "Duke heard: " + input;
     }
 }
