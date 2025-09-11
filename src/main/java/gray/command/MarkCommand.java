@@ -10,8 +10,7 @@ import gray.ui.Ui;
  * Marks a task as done.
  */
 public class MarkCommand extends Command {
-    private int index;
-    private final boolean isValid;
+    private final int index;
 
     /**
      * Creates a new MarkCommand.
@@ -21,22 +20,10 @@ public class MarkCommand extends Command {
      */
     public MarkCommand(int index) {
         this.index = index;
-        isValid = true;
-    }
-
-    /**
-     * Creates a new MarkCommand.
-     * If index is invalid.
-     */
-    public MarkCommand() {
-        isValid = false;
     }
 
     @Override
     public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
-        if (!isValid) {
-            return ui.showNoIndex();
-        }
         try {
             taskList.mark(index);
             String output = ui.showMarkTask(taskList.get(index));
