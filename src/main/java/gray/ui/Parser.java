@@ -5,16 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import gray.command.AddCommand;
-import gray.command.ByeCommand;
-import gray.command.Command;
-import gray.command.DateCommand;
-import gray.command.DeleteCommand;
-import gray.command.FindCommand;
-import gray.command.InvalidCommand;
-import gray.command.ListCommand;
-import gray.command.MarkCommand;
-import gray.command.UnmarkCommand;
+import gray.command.*;
 import gray.exception.InvalidTaskException;
 import gray.task.Deadline;
 import gray.task.Event;
@@ -38,10 +29,13 @@ public class Parser {
         TODO("todo"),
         DEADLINE("deadline"),
         EVENT("event");
+
         private final String taskType;
+
         TaskType(String taskType) {
             this.taskType = taskType;
         }
+
         public String getTaskType() {
             return taskType;
         }
@@ -61,10 +55,13 @@ public class Parser {
         START_END("start and end date/time"),
         DESCRIPTION_START_END("description, start and end date/time"),
         WRONG_ORDER("correct ordering of information");
+
         private final String missingInfo;
+
         MissingInfo(String missingInfo) {
             this.missingInfo = missingInfo;
         }
+
         public String getMissingInfo() {
             return missingInfo;
         }
@@ -79,11 +76,11 @@ public class Parser {
      */
     private static String getStringBetweenRegexes(String str1, String str2, String target) {
         String[] firstSplit = target.split(str1, 2);
-        if (firstSplit.length == 2) {
-            return firstSplit[1].split(str2, 2)[0].trim();
-        } else {
+        if (firstSplit.length != 2) {
             return "";
         }
+        String result = firstSplit[1].split(str2, 2)[0];
+        return result.trim();
     }
 
     /**
@@ -95,62 +92,61 @@ public class Parser {
      * @throws InvalidTaskException If any one of description, start and end is empty.
      */
     private static void checkEvent(String description, String start, String end) throws InvalidTaskException {
-        boolean noDescription = description.isEmpty();
+        boolean invalidDescription = description.isEmpty() || description.startsWith("/to");
         boolean noStart = start.isEmpty();
         boolean noEnd = end.isEmpty();
-        if (noDescription && noStart && noEnd) {
+
+        if (invalidDescription && noStart && noEnd) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.DESCRIPTION_START_END);
-        } else if (noDescription && noStart) {
+        } else if (invalidDescription && noStart) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.DESCRIPTION_START);
-        } else if (noDescription && noEnd) {
+        } else if (invalidDescription && noEnd) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.DESCRIPTION_END);
         } else if (noStart && noEnd) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.START_END);
-        } else if (noDescription) {
+        } else if (invalidDescription) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.DESCRIPTION);
         } else if (noStart) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.START);
         } else if (noEnd) {
             throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.END);
+        } else if (description.contains("/to")) {
+            throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.WRONG_ORDER);
         }
     }
 
     private static Command list(String[] inputParts) {
-        if (inputParts.length == 1 || inputParts[1].trim().isEmpty()) {
-            return new ListCommand();
-        } else {
+        if (inputParts.length != 1 && !inputParts[1].trim().isEmpty()) {
             return new InvalidCommand();
         }
+        return new ListCommand();
     }
 
-    private static MarkCommand mark(String[] inputParts) {
-        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            int index = Integer.parseInt(inputParts[1]) - 1;
-            return new MarkCommand(index);
-        } else {
-            return new MarkCommand();
+    private static Command mark(String[] inputParts) {
+        if (inputParts.length != 2 || !inputParts[1].matches("\\d+")) {
+            return new NoIndexCommand();
         }
+        int index = Integer.parseInt(inputParts[1]) - 1;
+        return new MarkCommand(index);
     }
 
-    private static UnmarkCommand unmark(String[] inputParts) {
-        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            int index = Integer.parseInt(inputParts[1]) - 1;
-            return new UnmarkCommand(index);
-        } else {
-            return new UnmarkCommand();
+    private static Command unmark(String[] inputParts) {
+        if (inputParts.length != 2 || !inputParts[1].matches("\\d+")) {
+            return new NoIndexCommand();
         }
+        int index = Integer.parseInt(inputParts[1]) - 1;
+        return new UnmarkCommand(index);
     }
 
-    private static DeleteCommand delete(String[] inputParts) {
-        if (inputParts.length == 2 && inputParts[1].matches("\\d+")) {
-            int index = Integer.parseInt(inputParts[1]) - 1;
-            return new DeleteCommand(index);
-        } else {
-            return new DeleteCommand();
+    private static Command delete(String[] inputParts) {
+        if (inputParts.length != 2 || !inputParts[1].matches("\\d+")) {
+            return new NoIndexCommand();
         }
+        int index = Integer.parseInt(inputParts[1]) - 1;
+        return new DeleteCommand(index);
     }
 
-    private static AddCommand createTodo(String[] inputParts) {
+    private static Command addTodo(String[] inputParts) {
         try {
             if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
                 throw new InvalidTaskException(Parser.TaskType.TODO, Parser.MissingInfo.DESCRIPTION);
@@ -159,74 +155,91 @@ public class Parser {
             Todo todo = new Todo(description);
             return new AddCommand(todo);
         } catch (InvalidTaskException e) {
-            return new AddCommand(e);
+            return new InvalidTaskExceptionCommand(e);
         }
     }
 
-    private static AddCommand createDeadline(String[] inputParts) {
-        try {
-            if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+    private static void checkDeadline(String[] inputParts) throws InvalidTaskException {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION_DUE);
+        } else if (inputParts[1].trim().startsWith("/by")) {
+            if (inputParts[1].split("/by", 2)[1].isEmpty()) {
                 throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION_DUE);
-            } else if (inputParts[1].trim().startsWith("/by")) {
-                if (inputParts[1].split("/by", 2)[1].isEmpty()) {
-                    throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION_DUE);
-                }
-                throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION);
             }
-            inputParts = inputParts[1].split("/by", 2);
-            if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-                throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DUE);
-            }
-            String description = inputParts[0].trim();
-            LocalDateTime by = LocalDateTime.parse(inputParts[1].trim(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-            Deadline deadline = new Deadline(description, by);
+            throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DESCRIPTION);
+        }
+
+        inputParts = inputParts[1].split("/by", 2);
+
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            throw new InvalidTaskException(Parser.TaskType.DEADLINE, Parser.MissingInfo.DUE);
+        }
+    }
+
+    private static Deadline createDeadline(String[] inputParts) {
+        inputParts = inputParts[1].split("/by", 2);
+        String description = inputParts[0].trim();
+        String dateTime = inputParts[1].trim();
+        LocalDateTime by = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return new Deadline(description, by);
+    }
+
+    private static Command addDeadline(String[] inputParts) {
+        try {
+            checkDeadline(inputParts);
+            Deadline deadline = createDeadline(inputParts);
             return new AddCommand(deadline);
         } catch (InvalidTaskException e) {
-            return new AddCommand(e);
+            return new InvalidTaskExceptionCommand(e);
         } catch (DateTimeParseException e) {
-            return new AddCommand();
+            return new InvalidDateTimeCommand();
         }
     }
 
-    private static AddCommand createEvent(String input) {
+    private static String getEnd(String input) {
+        String[] temp = input.split("/to", 2);
+        String end;
+        if (temp.length == 2) {
+            end = temp[1].trim();
+        } else {
+            end = "";
+        }
+        return end;
+    }
+
+    private static Event createEvent(String description, String start, String end) {
+        LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        return new Event(description, startDate, endDate);
+    }
+
+    private static Command addEvent(String input) {
         try {
             String description = Parser.getStringBetweenRegexes(" ", "/from", input);
-            if (description.startsWith("/to")) {
-                description = "";
-            }
             String start = Parser.getStringBetweenRegexes("/from", "/to", input);
-            String[] temp = input.split("/to", 2);
-            String end;
-            if (temp.length == 2) {
-                end = temp[1].trim();
-            } else {
-                end = "";
-            }
+            String end = getEnd(input);
+
             Parser.checkEvent(description, start, end);
-            if (description.contains("/to")) {
-                throw new InvalidTaskException(Parser.TaskType.EVENT, Parser.MissingInfo.WRONG_ORDER);
-            }
-            LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-            LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-            Event event = new Event(description, startDate, endDate);
+
+            Event event = createEvent(description, start, end);
             return new AddCommand(event);
         } catch (InvalidTaskException e) {
-            return new AddCommand(e);
+            return new InvalidTaskExceptionCommand(e);
         } catch (DateTimeParseException e) {
-            return new AddCommand();
+            return new InvalidDateTimeCommand();
         }
     }
 
-    private static DateCommand getTasksOn(String[] inputParts) {
+    private static Command getTasksOn(String[] inputParts) {
         if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
-            return new DateCommand(false);
+            return new NoDateCommand();
         }
+
         try {
             LocalDate date = LocalDate.parse(inputParts[1], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             return new DateCommand(date);
         } catch (DateTimeParseException e) {
-            return new DateCommand(true);
+            return new InvalidDateCommand();
         }
     }
 
@@ -247,6 +260,7 @@ public class Parser {
         if (input.trim().equals("bye")) {
             return new ByeCommand();
         }
+
         String[] inputParts = input.split(" ", 2);
         Parser.CommandType command;
         try {
@@ -254,14 +268,15 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             command = Parser.CommandType.INVALID;
         }
+
         //CHECKSTYLE.OFF: Indentation
         return switch (command) {
             case LIST -> Parser.list(inputParts);
             case MARK -> Parser.mark(inputParts);
             case UNMARK -> Parser.unmark(inputParts);
-            case TODO -> Parser.createTodo(inputParts);
-            case DEADLINE -> Parser.createDeadline(inputParts);
-            case EVENT -> Parser.createEvent(input);
+            case TODO -> Parser.addTodo(inputParts);
+            case DEADLINE -> Parser.addDeadline(inputParts);
+            case EVENT -> Parser.addEvent(input);
             case DELETE -> Parser.delete(inputParts);
             case DATE -> Parser.getTasksOn(inputParts);
             case FIND -> Parser.find(inputParts);

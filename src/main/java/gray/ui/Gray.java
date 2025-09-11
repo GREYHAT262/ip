@@ -11,8 +11,8 @@ import gray.task.TaskList;
  * Represents a chatbot which manages users' tasks.
  */
 public class Gray {
-    private Ui ui;
-    private Storage storage;
+    private final Ui ui;
+    private final Storage storage;
     private TaskList tasks;
 
     /**
