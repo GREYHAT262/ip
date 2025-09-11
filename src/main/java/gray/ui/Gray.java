@@ -41,6 +41,11 @@ public class Gray {
     public String getResponse(String input) {
         try {
             Command c = Parser.parse(input);
+
+            assert tasks != null: "tasks should be initialised";
+            assert ui != null: "ui should be initialised";
+            assert storage != null: "storage should be initialised";
+
             String output = c.execute(tasks, ui, storage);
             storage.save(tasks);
             return output;

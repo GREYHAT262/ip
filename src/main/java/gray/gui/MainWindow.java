@@ -37,6 +37,9 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
+        assert userImage != null: "userImage not found";
+        assert grayImage != null: "grayImage not found";
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         showWelcome();
     }
