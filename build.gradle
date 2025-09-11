@@ -54,9 +54,10 @@ application {
 shadowJar {
     archiveBaseName = "gray"
     archiveClassifier = null
-    archiveFileName = "gray.jar"
+    archiveFileName = "gray-v2.jar"
 }
 
 run{
     standardInput = System.in
+    enableAssertions = true;
 }
