@@ -1,5 +1,7 @@
 package gray.task;
 
+import java.time.LocalDate;
+
 /**
  * Represents a generic task with a description and completion status.
  */
@@ -34,6 +36,10 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    public boolean isCorrectDate(LocalDate date) {
+        return false;
     }
 
     public boolean matchDescription(String description) {

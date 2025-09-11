@@ -27,6 +27,7 @@ public class Deadline extends Task {
      *
      * @param date Date to be compared to.
      */
+    @Override
     public boolean isCorrectDate(LocalDate date) {
         return byDate.getDayOfMonth() == date.getDayOfMonth();
     }
