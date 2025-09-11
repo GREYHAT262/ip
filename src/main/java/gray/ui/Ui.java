@@ -1,6 +1,7 @@
 package gray.ui;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
@@ -162,6 +163,14 @@ public class Ui {
         } else {
             return "Here are the matching tasks in your list:\n" + taskList;
         }
+    }
+
+    /**
+     * Returns nearest available time block.
+     */
+    public String showFreeTime(LocalDateTime start, LocalDateTime end) {
+        return start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " - "
+                + end.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy"));
     }
 
     /**

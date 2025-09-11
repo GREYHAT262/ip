@@ -37,6 +37,15 @@ public class Event extends Task {
     }
 
     @Override
+    public boolean isWithinRange(LocalDateTime start, LocalDateTime end) {
+        if (this.start.isBefore(start)) {
+            return this.end.isAfter(start);
+        } else {
+            return this.start.isBefore(end);
+        }
+    }
+
+    @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: "
                 + start.format(DateTimeFormatter.ofPattern("HHmm, MMM d yyyy")) + " to: "

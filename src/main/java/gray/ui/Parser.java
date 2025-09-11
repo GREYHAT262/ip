@@ -19,7 +19,7 @@ public class Parser {
      * Represents possible commands from a user.
      */
     public enum CommandType {
-        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, FIND, INVALID;
+        LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, DATE, FIND, FREE, INVALID;
     }
 
     /**
@@ -250,6 +250,21 @@ public class Parser {
         return new FindCommand(inputParts[1].trim());
     }
 
+    private static Command findFreeTime(String[] inputParts) {
+        if (inputParts.length != 2 || inputParts[1].trim().isEmpty()) {
+            return new InvalidCommand();
+        }
+
+        int hours;
+        try {
+            hours = Integer.parseInt(inputParts[1].trim());
+        } catch (NumberFormatException e) {
+            return new InvalidCommand();
+        }
+
+        return new FindFreeTimeCommand(hours);
+    }
+
     /**
      * Returns a Command object to be executed.
      * The subtype of Command is determined by user input.
@@ -280,6 +295,7 @@ public class Parser {
             case DELETE -> Parser.delete(inputParts);
             case DATE -> Parser.getTasksOn(inputParts);
             case FIND -> Parser.find(inputParts);
+            case FREE -> Parser.findFreeTime(inputParts);
             default -> new InvalidCommand();
         };
         //CHECKSTYLE.ON: Indentation

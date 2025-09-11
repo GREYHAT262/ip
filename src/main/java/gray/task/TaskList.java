@@ -1,6 +1,7 @@
 package gray.task;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -100,6 +101,19 @@ public class TaskList {
                 .filter(task -> task.matchDescription(description))
                 .collect(Collectors.toCollection(ArrayList::new));
         return new TaskList(tasks);
+    }
+
+    /**
+     * Checks if a block of time is available.
+     *
+     * @param start Start of time block.
+     * @param end End of time block.
+     * @return Availability of time block
+     */
+    public boolean isAvailable(LocalDateTime start, LocalDateTime end) {
+        return taskList
+                .stream()
+                .noneMatch(task -> task.isWithinRange(start, end));
     }
 
     /**

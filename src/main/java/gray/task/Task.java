@@ -1,6 +1,7 @@
 package gray.task;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Represents a generic task with a description and completion status.
@@ -39,6 +40,10 @@ public class Task {
     }
 
     public boolean isCorrectDate(LocalDate date) {
+        return false;
+    }
+
+    public boolean isWithinRange(LocalDateTime start, LocalDateTime end) {
         return false;
     }
 
