@@ -10,8 +10,7 @@ import gray.ui.Ui;
  * Marks a task as not done.
  */
 public class UnmarkCommand extends Command {
-    private int index;
-    private final boolean isValid;
+    private final int index;
 
     /**
      * Creates a new UnmarkCommand.
@@ -21,22 +20,10 @@ public class UnmarkCommand extends Command {
      */
     public UnmarkCommand(int index) {
         this.index = index;
-        isValid = true;
-    }
-
-    /**
-     * Creates a new UnmarkCommand.
-     * If index is invalid.
-     */
-    public UnmarkCommand() {
-        isValid = false;
     }
 
     @Override
     public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
-        if (!isValid) {
-            return ui.showNoIndex();
-        }
         try {
             taskList.unmark(index);
             String output = ui.showUnmarkTask(taskList.get(index));

@@ -10,8 +10,7 @@ import gray.ui.Ui;
  * Deletes a task from a list of tasks.
  */
 public class DeleteCommand extends Command {
-    private int index;
-    private final boolean isValid;
+    private final int index;
 
     /**
      * Creates a new DeleteCommand.
@@ -21,22 +20,10 @@ public class DeleteCommand extends Command {
      */
     public DeleteCommand(int index) {
         this.index = index;
-        isValid = true;
-    }
-
-    /**
-     * Creates a new DeleteCommand.
-     * If index is invalid.
-     */
-    public DeleteCommand() {
-        isValid = false;
     }
 
     @Override
     public String execute(TaskList taskList, Ui ui, Storage storage) throws IOException {
-        if (!isValid) {
-            return ui.showNoIndex();
-        }
         try {
             String output = ui.showDeleteTask(taskList.delete(index), taskList.size());
             storage.save(taskList);

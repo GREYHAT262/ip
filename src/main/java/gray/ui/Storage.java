@@ -36,6 +36,7 @@ public class Storage {
         if (!directory.exists()) {
             directory.mkdir();
         }
+
         file = new File(filePath);
         if (!file.exists()) {
             try {
@@ -44,6 +45,63 @@ public class Storage {
                 ui.showFileCreationError();
             }
         }
+    }
+
+    private void checkLength(String[] parts, int length) throws CorruptedFileException {
+        if (parts.length != length) {
+            throw new CorruptedFileException();
+        }
+    }
+
+    private void checkMark(String mark) throws CorruptedFileException {
+        if (!(mark.equals("0") || mark.equals("1"))) {
+            throw new CorruptedFileException();
+        }
+    }
+
+    private void addStatus(Task task, String mark) {
+        if (mark.equals("1")) {
+            task.markAsDone();
+        }
+    }
+
+    private Todo loadTodo(String[] parts, ArrayList<Task> tasks, String mark) {
+        String description = parts[2].trim();
+        Todo todo = new Todo(description);
+        tasks.add(todo);
+        return todo;
+    }
+
+    private Deadline loadDeadline(String[] parts, ArrayList<Task> tasks, String mark) {
+        String description = parts[2].trim();
+        LocalDateTime by;
+
+        try {
+            by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        } catch (DateTimeParseException e) {
+            throw new CorruptedFileException();
+        }
+
+        Deadline deadline = new Deadline(description, by);
+        tasks.add(deadline);
+        return deadline;
+    }
+
+    private Event loadEvent(String[] parts, ArrayList<Task> tasks, String mark) {
+        String description = parts[2].trim();
+        LocalDateTime start;
+        LocalDateTime end;
+
+        try {
+            start = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            end = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        } catch (DateTimeParseException e) {
+            throw new CorruptedFileException();
+        }
+
+        Event event = new Event(description, start, end);
+        tasks.add(event);
+        return event;
     }
 
     /**
@@ -56,66 +114,36 @@ public class Storage {
     public ArrayList<Task> load() throws FileNotFoundException, CorruptedFileException {
         Scanner scanner = new Scanner(file);
         ArrayList<Task> tasks = new ArrayList<>();
+
         while (scanner.hasNextLine()) {
             String entry = scanner.nextLine();
             String[] parts = entry.split("\\|");
+
             if (parts.length < 2) {
                 throw new CorruptedFileException();
             }
+
             String type = parts[0].trim();
             String mark = parts[1].trim();
-            if (!(mark.equals("0") || mark.equals("1"))) {
-                throw new CorruptedFileException();
-            }
+
+            checkMark(mark);
+
             //CHECKSTYLE.OFF: Indentation
             switch (type) {
                 case "T" -> {
-                    if (parts.length != 3) {
-                        throw new CorruptedFileException();
-                    }
-                    String description = parts[2].trim();
-                    Todo todo = new Todo(description);
-                    tasks.add(todo);
-                    if (mark.equals("1")) {
-                        todo.markAsDone();
-                    }
+                    checkLength(parts, 3);
+                    Todo todo = loadTodo(parts, tasks, mark);
+                    addStatus(todo, mark);
                 }
                 case "D" -> {
-                    if (parts.length != 4) {
-                        throw new CorruptedFileException();
-                    }
-                    String description = parts[2].trim();
-                    LocalDateTime by;
-                    try {
-                        by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    } catch (DateTimeParseException e) {
-                        throw new CorruptedFileException();
-                    }
-                    Deadline deadline = new Deadline(description, by);
-                    tasks.add(deadline);
-                    if (mark.equals("1")) {
-                        deadline.markAsDone();
-                    }
+                    checkLength(parts, 4);
+                    Deadline deadline = loadDeadline(parts, tasks, mark);
+                    addStatus(deadline, mark);
                 }
                 case "E" -> {
-                    if (parts.length != 5) {
-                        throw new CorruptedFileException();
-                    }
-                    String description = parts[2].trim();
-                    LocalDateTime start;
-                    LocalDateTime end;
-                    try {
-                        start = LocalDateTime.parse(parts[3].trim(),
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                        end = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    } catch (DateTimeParseException e) {
-                        throw new CorruptedFileException();
-                    }
-                    Event event = new Event(description, start, end);
-                    tasks.add(event);
-                    if (mark.equals("1")) {
-                        event.markAsDone();
-                    }
+                    checkLength(parts, 5);
+                    Event event = loadEvent(parts, tasks, mark);
+                    addStatus(event, mark);
                 }
                 default -> throw new CorruptedFileException();
             }
