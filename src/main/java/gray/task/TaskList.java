@@ -3,6 +3,7 @@ package gray.task;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Represents a list of tasks.
@@ -83,32 +84,22 @@ public class TaskList {
      * Returns task list containing only tasks occurring on the specified date.
      */
     public TaskList filterByDate(LocalDate date) {
-        TaskList filtered = new TaskList();
-        for (Task task : taskList) {
-            if (task instanceof Deadline deadline) {
-                if (deadline.isCorrectDate(date)) {
-                    filtered.add(deadline);
-                }
-            } else if (task instanceof Event event) {
-                if (event.isCorrectDate(date)) {
-                    filtered.add(event);
-                }
-            }
-        }
-        return filtered;
+        ArrayList<Task> tasks = taskList
+                .stream()
+                .filter(task -> task.isCorrectDate(date))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return new TaskList(tasks);
     }
 
     /**
      * Returns task list containing only tasks with matching descriptions.
      */
     public TaskList filterByDescription(String description) {
-        TaskList filtered = new TaskList();
-        for (Task task : taskList) {
-            if (task.matchDescription(description)) {
-                filtered.add(task);
-            }
-        }
-        return filtered;
+        ArrayList<Task> tasks = taskList
+                .stream()
+                .filter(task -> task.matchDescription(description))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return new TaskList(tasks);
     }
 
     /**
