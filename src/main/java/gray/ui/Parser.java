@@ -38,6 +38,7 @@ public class Parser {
         TODO("todo"),
         DEADLINE("deadline"),
         EVENT("event");
+
         private final String taskType;
         TaskType(String taskType) {
             this.taskType = taskType;
@@ -61,6 +62,7 @@ public class Parser {
         START_END("start and end date/time"),
         DESCRIPTION_START_END("description, start and end date/time"),
         WRONG_ORDER("correct ordering of information");
+        
         private final String missingInfo;
         MissingInfo(String missingInfo) {
             this.missingInfo = missingInfo;
