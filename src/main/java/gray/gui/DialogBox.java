@@ -50,7 +50,7 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Produce user dialog box.
+     * Produces user dialog box.
      * @param text User input.
      * @param img User image icon.
      * @return DialogBox containing user image icon and user input.
@@ -60,7 +60,7 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Produce chatbot dialog box.
+     * Produces chatbot dialog box.
      * @param text Chatbot response.
      * @param img Chatbot image icon.
      * @return DialogBox containing chatbot image icon and chatbot response.
