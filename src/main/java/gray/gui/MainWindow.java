@@ -66,10 +66,17 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = gray.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getGrayDialog(response, grayImage)
-        );
+        if (gray.isError(input)) {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getErrorDialog("Error: " + response, grayImage)
+            );
+        } else {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getGrayDialog(response, grayImage)
+            );
+        }
         userInput.clear();
         if (input.equals("bye")) {
             PauseTransition pause = new PauseTransition(Duration.seconds(1));

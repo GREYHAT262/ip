@@ -50,7 +50,7 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Produce user dialog box.
+     * Produces user dialog box.
      * @param text User input.
      * @param img User image icon.
      * @return DialogBox containing user image icon and user input.
@@ -60,7 +60,7 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Produce chatbot dialog box.
+     * Produces chatbot dialog box.
      * @param text Chatbot response.
      * @param img Chatbot image icon.
      * @return DialogBox containing chatbot image icon and chatbot response.
@@ -68,6 +68,20 @@ public class DialogBox extends HBox {
     public static DialogBox getGrayDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        return db;
+    }
+
+    /**
+     * Produces chatbot error dialog box.
+     * @param text Error message text.
+     * @param img Chatbot image icon.
+     * @return DialogBox containing chatbot image icon and error message.
+     */
+    // ChatGPT-Generated - Asked it to create another design for error responses
+    public static DialogBox getErrorDialog(String text, Image img) {
+        var db = new DialogBox(text, img);
+        db.flip(); // error still comes from Gray, so flip like normal
+        db.dialog.getStyleClass().add("error-label"); // add special CSS class
         return db;
     }
 }

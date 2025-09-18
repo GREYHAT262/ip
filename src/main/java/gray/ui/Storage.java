@@ -105,7 +105,7 @@ public class Storage {
     }
 
     /**
-     * Load tasks stored in file into chatbot.
+     * Loads tasks stored in file into chatbot.
      *
      * @return ArrayList of Task objects.
      * @throws FileNotFoundException If file used for storage cannot be found.
