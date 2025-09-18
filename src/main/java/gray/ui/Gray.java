@@ -3,7 +3,7 @@ package gray.ui;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import gray.command.Command;
+import gray.command.*;
 import gray.exception.CorruptedFileException;
 import gray.task.TaskList;
 
@@ -52,5 +52,12 @@ public class Gray {
         } catch (IOException e) {
             return ui.showWriteFileError();
         }
+    }
+
+    public boolean isError(String input) {
+        Command c = Parser.parse(input);
+        return c instanceof InvalidCommand || c instanceof InvalidDateCommand || c instanceof InvalidDateTimeCommand
+                || c instanceof InvalidTaskExceptionCommand || c instanceof NoDateCommand
+                || c instanceof NoIndexCommand;
     }
 }

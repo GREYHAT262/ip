@@ -14,25 +14,6 @@ import gray.task.TaskList;
  * Prints chatbot responses onto the screen.
  */
 public class Ui {
-    private final Scanner scanner;
-
-    /**
-     * Creates a new Ui.
-     */
-    public Ui() {
-        scanner = new Scanner(System.in);
-    }
-
-    /**
-     * Appends a line above and below chatbot response.
-     *
-     * @param input Gray response.
-     */
-    private static void respond(String input) {
-        String horizontalLine = "-------------------------------------------------------------------";
-        System.out.println(horizontalLine + "\n" + input + "\n" + horizontalLine);
-    }
-
     /**
      * Returns goodbye message.
      */
@@ -206,14 +187,5 @@ public class Ui {
      */
     public String showInvalidTaskException(InvalidTaskException e) {
         return e.getMessage();
-    }
-
-    /**
-     * Reads user command one line at a time.
-     *
-     * @return User command.
-     */
-    public String readCommand() {
-        return scanner.nextLine();
     }
 }

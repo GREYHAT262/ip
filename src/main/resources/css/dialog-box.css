@@ -23,3 +23,10 @@
     -fx-rotate: 0;
 }
 
+/* ChatGPT-generated - Asked it to create another design for error responses */
+.error-label {
+    -fx-background-color: #ffdddd;
+    -fx-text-fill: #a30000;
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+}
