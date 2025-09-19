@@ -25,7 +25,7 @@ GrayPro is a personal assistant chatbot which helps you to track your tasks and 
 5. Refer to the features below for a detailed guide of what the chatbot can do.
 
 ## Features
-> [!NOTE]
+> **NOTE**\
 > Words in UPPER_CASE are the parameters to be supplied by the user.
 
 ### Listing all tasks: `list`
