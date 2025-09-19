@@ -27,8 +27,11 @@ public class MainWindow extends AnchorPane {
 
     private Gray gray;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
-    private Image grayImage = new Image(this.getClass().getResourceAsStream("/images/gray.png"));
+    //Image from https://pluspng.com/png-81874.html
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
+
+    //Image from https://www.flaticon.com/free-icon/bot_4712109
+    private final Image grayImage = new Image(this.getClass().getResourceAsStream("/images/gray.png"));
 
     /**
      * Initialises the GUI.
@@ -39,8 +42,13 @@ public class MainWindow extends AnchorPane {
         assert userImage != null : "userImage not found";
         assert grayImage != null : "grayImage not found";
 
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        //@@author salmonkarp-reused
+        //Reused from https://github.com/nus-cs2103-AY2526S1/forum/issues/171
+        dialogContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
+            scrollPane.setVvalue(1.0);
+        });
         showWelcome();
+        //@@author
     }
 
     /** Injects the Gray instance */

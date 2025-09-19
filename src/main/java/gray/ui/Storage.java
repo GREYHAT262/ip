@@ -30,6 +30,7 @@ public class Storage {
      * @param filePath Location of file used for storage.
      */
     public Storage(Ui ui, String filePath) {
+        // Solution below adapted from ChatGPT
         int idx = filePath.lastIndexOf("/");
         String directoryPath = filePath.substring(0, idx);
         File directory = new File(directoryPath);
