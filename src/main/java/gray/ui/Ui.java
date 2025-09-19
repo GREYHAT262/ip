@@ -189,9 +189,9 @@ public class Ui {
     }
 
     /**
-     *
+     * Returns error message if start date is before end date.
      */
-    public String showUnexpectedDate() {
-        return "Please give a start date that is before the end date.";
+    public String showUnexpectedDateAndTime() {
+        return "Please give a start date and time that is before the end date and time.";
     }
 }

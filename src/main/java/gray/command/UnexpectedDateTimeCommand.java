@@ -10,6 +10,6 @@ import gray.ui.Ui;
 public class UnexpectedDateTimeCommand extends Command {
     @Override
     public String execute(TaskList taskList, Ui ui, Storage storage) {
-        return ui.showUnexpectedDate();
+        return ui.showUnexpectedDateAndTime();
     }
 }
