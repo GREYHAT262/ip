@@ -54,7 +54,7 @@ application {
 shadowJar {
     archiveBaseName = "gray"
     archiveClassifier = null
-    archiveFileName = "gray-v2.jar"
+    archiveFileName = "gray.jar"
 }
 
 run{
