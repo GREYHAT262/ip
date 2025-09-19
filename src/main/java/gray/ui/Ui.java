@@ -3,7 +3,6 @@ package gray.ui;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 import gray.exception.CorruptedFileException;
 import gray.exception.InvalidTaskException;
@@ -187,5 +186,12 @@ public class Ui {
      */
     public String showInvalidTaskException(InvalidTaskException e) {
         return e.getMessage();
+    }
+
+    /**
+     *
+     */
+    public String showUnexpectedDate() {
+        return "Please give a start date that is before the end date.";
     }
 }

@@ -3,7 +3,14 @@ package gray.ui;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import gray.command.*;
+import gray.command.Command;
+import gray.command.InvalidCommand;
+import gray.command.InvalidDateCommand;
+import gray.command.InvalidDateTimeCommand;
+import gray.command.InvalidTaskExceptionCommand;
+import gray.command.NoDateCommand;
+import gray.command.NoIndexCommand;
+import gray.command.UnexpectedDateTimeCommand;
 import gray.exception.CorruptedFileException;
 import gray.task.TaskList;
 
@@ -42,9 +49,9 @@ public class Gray {
         try {
             Command c = Parser.parse(input);
 
-            assert tasks != null: "tasks should be initialised";
-            assert ui != null: "ui should be initialised";
-            assert storage != null: "storage should be initialised";
+            assert tasks != null : "tasks should be initialised";
+            assert ui != null : "ui should be initialised";
+            assert storage != null : "storage should be initialised";
 
             String output = c.execute(tasks, ui, storage);
             storage.save(tasks);
@@ -54,10 +61,15 @@ public class Gray {
         }
     }
 
+    /**
+     * Determines if input results in an error.
+     * @param input User input.
+     * @return Whether input results in an error.
+     */
     public boolean isError(String input) {
         Command c = Parser.parse(input);
         return c instanceof InvalidCommand || c instanceof InvalidDateCommand || c instanceof InvalidDateTimeCommand
                 || c instanceof InvalidTaskExceptionCommand || c instanceof NoDateCommand
-                || c instanceof NoIndexCommand;
+                || c instanceof NoIndexCommand || c instanceof UnexpectedDateTimeCommand;
     }
 }

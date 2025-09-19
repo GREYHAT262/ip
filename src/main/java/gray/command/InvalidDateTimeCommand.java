@@ -1,10 +1,10 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-
-import java.io.IOException;
 
 /**
  * Alerts user that the date and time is not in the required format.

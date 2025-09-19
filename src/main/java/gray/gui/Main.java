@@ -2,13 +2,12 @@ package gray.gui;
 
 import java.io.IOException;
 
+import gray.ui.Gray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import gray.ui.Gray;
 
 /**
  * A GUI for Duke using FXML.
@@ -28,7 +27,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setGray(gray);  // inject the Gray instance
+            fxmlLoader.<MainWindow>getController().setGray(gray); // inject the Gray instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
