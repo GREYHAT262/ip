@@ -1,13 +1,13 @@
 package gray.command;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 
 /**
  * Find the nearest x-hours time block that is available.
@@ -24,6 +24,7 @@ public class FindFreeTimeCommand extends Command {
         this.hours = hours;
     }
 
+    @Override
     public String execute(TaskList taskList, Ui ui, Storage storage) {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
         LocalDateTime start = now.plusHours(1).truncatedTo(ChronoUnit.HOURS).toLocalDateTime();

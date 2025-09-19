@@ -2,7 +2,6 @@ package gray.command;
 
 import java.io.IOException;
 
-import gray.exception.InvalidTaskException;
 import gray.task.Task;
 import gray.task.TaskList;
 import gray.ui.Storage;

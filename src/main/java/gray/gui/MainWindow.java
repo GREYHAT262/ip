@@ -1,5 +1,6 @@
 package gray.gui;
 
+import gray.ui.Gray;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -10,8 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
-import gray.ui.Gray;
 
 /**
  * Controller for the main GUI.
@@ -37,8 +36,8 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
-        assert userImage != null: "userImage not found";
-        assert grayImage != null: "grayImage not found";
+        assert userImage != null : "userImage not found";
+        assert grayImage != null : "grayImage not found";
 
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         showWelcome();
@@ -69,7 +68,7 @@ public class MainWindow extends AnchorPane {
         if (gray.isError(input)) {
             dialogContainer.getChildren().addAll(
                     DialogBox.getUserDialog(input, userImage),
-                    DialogBox.getErrorDialog("Error: " + response, grayImage)
+                    DialogBox.getErrorDialog(response, grayImage)
             );
         } else {
             dialogContainer.getChildren().addAll(

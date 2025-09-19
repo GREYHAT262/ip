@@ -2,6 +2,8 @@ package gray.ui;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
+import org.junit.jupiter.api.Test;
+
 import gray.command.AddCommand;
 import gray.command.ByeCommand;
 import gray.command.DateCommand;
@@ -15,8 +17,6 @@ import gray.command.MarkCommand;
 import gray.command.NoDateCommand;
 import gray.command.NoIndexCommand;
 import gray.command.UnmarkCommand;
-
-import org.junit.jupiter.api.Test;
 
 public class ParserTest {
     @Test
@@ -68,8 +68,10 @@ public class ParserTest {
         assertInstanceOf(InvalidTaskExceptionCommand.class, Parser.parse("event marathon"));
         assertInstanceOf(InvalidTaskExceptionCommand.class, Parser.parse("event marathon /from 2025-08-26 0800"));
         assertInstanceOf(InvalidTaskExceptionCommand.class, Parser.parse("event marathon /to 2025-08-26 1200"));
-        assertInstanceOf(InvalidTaskExceptionCommand.class, Parser.parse("event /from 2025-08-26 0800 /to 2025-08-26 1200"));
-        assertInstanceOf(InvalidDateTimeCommand.class, Parser.parse("event marathon /from Sunday 8am /to Sunday 12pm"));
+        assertInstanceOf(InvalidTaskExceptionCommand.class, Parser.parse(
+                "event /from 2025-08-26 0800 /to 2025-08-26 1200"));
+        assertInstanceOf(InvalidDateTimeCommand.class, Parser.parse(
+                "event marathon /from Sunday 8am /to Sunday 12pm"));
     }
 
     @Test

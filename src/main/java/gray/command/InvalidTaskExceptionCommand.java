@@ -1,11 +1,11 @@
 package gray.command;
 
+import java.io.IOException;
+
 import gray.exception.InvalidTaskException;
 import gray.task.TaskList;
 import gray.ui.Storage;
 import gray.ui.Ui;
-
-import java.io.IOException;
 
 /**
  * Alerts user that the task is invalid.

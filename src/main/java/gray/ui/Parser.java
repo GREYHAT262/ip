@@ -5,8 +5,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import gray.command.*;
+import gray.command.AddCommand;
+import gray.command.ByeCommand;
+import gray.command.Command;
+import gray.command.DateCommand;
+import gray.command.DeleteCommand;
+import gray.command.FindCommand;
+import gray.command.FindFreeTimeCommand;
+import gray.command.InvalidCommand;
+import gray.command.InvalidDateCommand;
+import gray.command.InvalidDateTimeCommand;
+import gray.command.InvalidTaskExceptionCommand;
+import gray.command.ListCommand;
+import gray.command.MarkCommand;
+import gray.command.NoDateCommand;
+import gray.command.NoIndexCommand;
+import gray.command.UnexpectedDateTimeCommand;
+import gray.command.UnmarkCommand;
 import gray.exception.InvalidTaskException;
+import gray.exception.UnexpectedDateTimeException;
 import gray.task.Deadline;
 import gray.task.Event;
 import gray.task.Todo;
@@ -207,9 +224,12 @@ public class Parser {
         return end;
     }
 
-    private static Event createEvent(String description, String start, String end) {
+    private static Event createEvent(String description, String start, String end) throws UnexpectedDateTimeException {
         LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
         LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
+            throw new UnexpectedDateTimeException();
+        }
         return new Event(description, startDate, endDate);
     }
 
@@ -227,6 +247,8 @@ public class Parser {
             return new InvalidTaskExceptionCommand(e);
         } catch (DateTimeParseException e) {
             return new InvalidDateTimeCommand();
+        } catch (UnexpectedDateTimeException e) {
+            return new UnexpectedDateTimeCommand();
         }
     }
 
