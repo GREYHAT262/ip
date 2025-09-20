@@ -27,7 +27,7 @@ public class MainWindow extends AnchorPane {
 
     private Gray gray;
 
-    //Image from https://pluspng.com/png-81874.html
+    //Image from https://www.flaticon.com/free-icon/user_1077114
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
 
     //Image from https://www.flaticon.com/free-icon/bot_4712109
