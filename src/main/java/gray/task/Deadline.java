@@ -29,7 +29,8 @@ public class Deadline extends Task {
      */
     @Override
     public boolean isCorrectDate(LocalDate date) {
-        return byDate.getMonth() == date.getMonth() && byDate.getDayOfMonth() == date.getDayOfMonth();
+        return byDate.getYear() == date.getYear() && byDate.getMonth() == date.getMonth()
+                && byDate.getDayOfMonth() == date.getDayOfMonth();
     }
 
     @Override

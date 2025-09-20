@@ -32,8 +32,11 @@ public class Event extends Task {
      */
     @Override
     public boolean isCorrectDate(LocalDate date) {
-        return (start.getMonth() == date.getMonth() && start.getDayOfMonth() == date.getDayOfMonth())
-                || (end.getMonth() == date.getMonth() && end.getDayOfMonth() == date.getDayOfMonth());
+        boolean isStart = start.getYear() == date.getYear() && start.getMonth() == date.getMonth()
+                && start.getDayOfMonth() == date.getDayOfMonth();
+        boolean isEnd = end.getYear() == date.getYear() && end.getMonth() == date.getMonth()
+                && end.getDayOfMonth() == date.getDayOfMonth();
+        return isStart || isEnd;
     }
 
     @Override
